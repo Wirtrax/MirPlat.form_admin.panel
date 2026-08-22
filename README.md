@@ -1,75 +1,45 @@
-# React + TypeScript + Vite
+# React MirPlat.form_admin.panel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+npm run dev - запустить проект
 
-Currently, two official plugins are available:
+## Технологии которые используются в проекте
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+React, React-router-dom, Typescript, Redux, Axios, React Hook Form, Yup
+Vite, Eslint, Prettier
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Структура шаблона
 
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+.
+├── .vscode                                    # конфигурация под vs-code
+├── dist                                       # папка для билда (появится после npm run build)
+├── src
+|   ├── api                                    # папка для работы с сетью, создаются файлы под каждую сущность
+│   ├── app                                    # точка входа, компонент App
+│   ├── components                             # папка для компонентов без бизнес-логики (dumb components)
+│   ├── constants                              # константы разбитые по файлам
+│   ├── mocks                                  # папка для всех моков
+│   ├── modules                                # Основные компоненты с бизнес-логикой
+│       ├── Task                                 # Например, модуль Task, в котором содержится компонент карточки задачи. В этой папке также должны лежать store, стили, внутренние компоненты(папка components), типы. В общем, все что относится к данному модулю
+│   ├── pages                                  # Страницы, которые подключаются в роутере
+│   ├── router                                 # сам роутер(по сути один файл)
+│   ├── types                                  # интерфейсы для бизнес логики
+│   ├── utils                                  # вспомогательные функции, также разбиваем по файлам. Например, delay.ts
+│   ├── index.html                             # корневой html
+│   ├── react-app-env.d.ts                     # декларация модулей и переменных
+├── .browserlistsrc                            # список браузеров для autoprefixer
+├── .editorconfig                              # настройки для редакторов
+├── .eslintignore                              # игнорирование eslint
+├── .eslintrc                                  # Конфиг Eslint
+├── .gitignore                                 # Игнор файл для гита
+├── .prettierrc                                # Конфиг prettier
+├── package.json
+├── tsconfig.json                              # Конфиг тайпскрипта
+└── README.md
 ```
+
+## Правила по проекту
+
+1. Один файл – один компонент
+2. Импорты должны быть абсолютными
+3. Типы (types), константы (constants), вспомогательные функции (utils), редьюсеры (reducers), экшены (actions) в отдельных файлах
