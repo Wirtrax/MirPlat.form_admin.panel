@@ -4,7 +4,7 @@ import Table from '../../components/Table/Table';
 import Title from '../../components/Title/Title';
 import { getOrders } from '../../service/api';
 import type { TableColumn } from '../../components/Table/tableProps';
-import s from './OrderPage.module.scss';
+import s from './OrdersPage.module.scss';
 import pageStyle from '../Page.module.scss';
 import type { OrdersTypeOlder } from '../../types/apiType';
 

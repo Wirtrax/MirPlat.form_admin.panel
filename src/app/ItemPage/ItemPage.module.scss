@@ -1,3 +1,5 @@
+@use '../../styles/helpers' as *;
+
 .substrate {
     margin-block: rem(20);
 
@@ -42,14 +44,6 @@
         margin: 0;
     }
 
-    &__full-name {
-        margin: 0;
-        font-size: rem(16);
-        font-weight: 600;
-        color: var(--color-light);
-        line-height: 1.4;
-    }
-
     &__details {
         margin: 0;
         display: flex;
@@ -61,7 +55,8 @@
         flex-wrap: wrap;
     }
 
-    &__delete-btn {
+    &__delete-btn,
+    &__hidden-btn {
         padding: rem(8) rem(18);
         border: none;
         border-radius: rem(8);
@@ -87,26 +82,81 @@
             transform: scale(0.95);
         }
     }
+
+    &__hidden-btn {
+        background: var(--color-gray-80);
+        color: var(--color-dark-30);
+
+        &:hover {
+            background: var(--color-gray-70);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
 }
 
 .form {
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(15);
+
+    &__input-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: rem(10);
+
+        @include mobile {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+.item-info {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: rem(20) rem(15);
+    grid-template-columns: 2fr 1fr;
+    gap: rem(20);
 
+    @include laptop {
+        grid-template-columns: 1fr;
+    }
+}
 
-    &__checkbox-panel {
-        grid-column: span 2;
+.orders-list {
+    display: grid;
+    row-gap: rem(6);
+
+    &__item {
+        padding: rem(10);
+        border: 1px solid var(--color-gray-80);
+        border-radius: rem(10);
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    &__line {
-        width: 100%;
+    &__info {
+        display: flex;
+        align-items: center;
+        column-gap: rem(8);
+    }
+
+    &__initials {
+        padding: rem(8);
+        color: var(--color-light);
+        font-weight: 600;
+        border-radius: rem(6);
+    }
+
+    &__customer {
+        font-weight: 600;
+    }
+
+    &__order-number {
         display: block;
-        border: 0.1px dashed var(--color-gray-80);
-        margin-block: rem(8);
-    }
-
-    &__button {
-        padding-block: rem(10);
+        font-weight: 400;
+        color: var(--color-gray-60);
     }
 }

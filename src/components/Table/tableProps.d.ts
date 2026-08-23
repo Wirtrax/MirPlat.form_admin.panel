@@ -1,3 +1,5 @@
+import type { To } from 'react-router-dom';
+
 export interface TableColumn<T> {
   key: keyof T;
   title: string;
@@ -9,4 +11,5 @@ export interface TableProps<T extends object> {
   countElements: string;
   columns: TableColumn<T>[];
   data: T[];
+  link?: To;
 }

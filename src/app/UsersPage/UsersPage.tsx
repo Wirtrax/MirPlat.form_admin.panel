@@ -9,7 +9,8 @@ import type { TableColumn } from '../../components/Table/tableProps';
 import s from './UsersPage.module.scss';
 import pageStyle from '../Page.module.scss';
 import clsx from 'clsx';
-import { generateBlueGray, getFirstLetters } from '../../hooks/helpers/utils';
+import { getFirstLetters } from '../../utils/firstLetters';
+import { generateBlueGray } from '../../utils/generateBlueGray';
 import { useNavigate } from 'react-router-dom';
 
 function UsersPage() {

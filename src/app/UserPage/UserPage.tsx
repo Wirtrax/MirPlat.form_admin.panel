@@ -6,7 +6,7 @@ import SubstrateForUser from '../../components/SubstrateAdmin/SubstrateForUser/S
 import { useEffect, useState } from 'react';
 import type { User } from '../../types/apiType';
 import { deleteUser, getUsers, updateUser } from '../../service/api';
-import { getFirstLetters } from '../../hooks/helpers/utils';
+import { getFirstLetters } from '../../utils/firstLetters';
 import s from './UserPage.module.scss';
 import SelectAdmin from '../../components/Select/SelectAdmin';
 import { specializationOptions } from '../../components/Select/specializationOptions';

@@ -1,0 +1,42 @@
+@use '../../styles/helpers' as *;
+
+.form {
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(15);
+    min-width: rem(420);
+
+    @include mobile {
+        min-width: 100%;
+    }
+
+    &__input-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: rem(10);
+
+        @include mobile {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__checkbox-panel {
+        display: flex;
+        padding-top: rem(4);
+    }
+
+    &__error {
+        margin: 0;
+        color: rgb(223, 0, 0);
+        background: #ffe1e1;
+        padding: rem(8) rem(12);
+        border-radius: rem(8);
+        font-size: rem(13);
+        font-weight: 500;
+    }
+
+    &__button {
+        align-self: flex-start;
+        margin-top: rem(5);
+    }
+}
