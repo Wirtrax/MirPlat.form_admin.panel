@@ -5,8 +5,9 @@ import UsersPage from './app/UsersPage/UsersPage';
 import AdminLoginForm from './app/AdminLoginForm/AdminLoginForm';
 import ProtectedAdminRoute from './routes/ProtectedAdminRoute';
 import ItemsPage from './app/ItemsPage/ItemsPage';
-import OrderPage from './app/OrderPage/OrderPage';
+import OrdersPage from './app/OrdersPage/OrdersPage';
 import UserPage from './app/UserPage/UserPage';
+import ItemPage from './app/ItemPage/ItemPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,8 +23,9 @@ const router = createBrowserRouter(
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="/admin/users" element={<UsersPage />} />
           <Route path="/admin/items" element={<ItemsPage />} />
-          <Route path="/admin/orders" element={<OrderPage />} />
+          <Route path="/admin/orders" element={<OrdersPage />} />
           <Route path="/admin/user/:id" element={<UserPage />} />
+          <Route path="/admin/items/:id" element={<ItemPage />} />
         </Route>
       </Route>
     </>

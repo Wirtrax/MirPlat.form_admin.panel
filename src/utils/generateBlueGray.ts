@@ -1,14 +1,3 @@
-export function getFirstLetters(input: string, limit?: number): string {
-  const words = input.split(/[\s,;:.!?()"'-]+/).filter((word) => word.length > 0);
-  const letters = words.map((word) => word[0] || '');
-
-  if (limit !== undefined && limit > 0) {
-    return letters.slice(0, limit).join('');
-  }
-
-  return letters.join('');
-}
-
 export function generateBlueGray(format: 'hex' | 'rgb' = 'hex'): string {
   const isBlue = Math.random() > 0.5;
   const brightness = 0.2 + Math.random() * 0.6;
