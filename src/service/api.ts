@@ -3,7 +3,7 @@ import { request } from './utils/query';
 import { getAuthToken, setAuthToken } from './utils/authToken';
 
 interface adminLoginReaponse {
-  access_token: string;
+  token: string;
 }
 export const adminLogin = async (login: string, password: string) => {
   const data = await request<adminLoginReaponse>(
@@ -14,7 +14,7 @@ export const adminLogin = async (login: string, password: string) => {
     },
     'admin'
   );
-  setAuthToken(data.access_token);
+  setAuthToken(data.token);
   console.log(data);
   return data;
 };
@@ -171,6 +171,22 @@ export const getOrders = () => {
     '/orders',
     {
       method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    },
+    'admin'
+  );
+};
+
+// скачивание файла - Download
+
+export const downloadXLSXFile = () => {
+  return request<Blob>(
+    '/excel/download',
+    {
+      method: 'GET',
+      responseType: 'blob',
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
       },

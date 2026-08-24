@@ -9,10 +9,31 @@ import ProductIcon from '../assets/ico/admin/product.svg?react';
 import AllOrderIcon from '../assets/ico/admin/allOrder.svg?react';
 import LogoIcon from '../assets/ico/app/plat.romIco.png';
 import { Outlet } from 'react-router-dom';
+import { downloadXLSXFile } from '../service/api';
+import { useAppDispatch } from '../hooks/redux';
+import { unsetSuperAdmin } from '../service/features/superAdmin/superAdminSlice';
+import { TOKEN_STORAGE_KEY } from '../service/utils/authToken';
 
 interface AdminLayoutProps {}
 
 const AdminLayout: React.FC<AdminLayoutProps> = () => {
+  const dispatch = useAppDispatch();
+  const handleDownload = async () => {
+    const blob = await downloadXLSXFile();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = 'отчет.xlsx';
+    link.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleLogout = () => {
+    dispatch(unsetSuperAdmin());
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
+  };
+
   return (
     <div className={s['wrapper']}>
       <SideBar
@@ -28,8 +49,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = () => {
         adminName="Админ Дежурный"
         adminRole="Суперадмин"
         adminAvatar="АД"
-        onDownloadReport={() => {}}
-        onLogout={() => {}}
+        onDownloadReport={handleDownload}
+        onLogout={handleLogout}
       />
       <main className={s['main']}>
         <section className={s['stat-card__container']}>
