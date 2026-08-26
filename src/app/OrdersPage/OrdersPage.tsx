@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, type ChangeEvent } from 'react';
 import Input from '../../components/Input/AdminInput';
 import Table from '../../components/Table/Table';
 import Title from '../../components/Title/Title';
@@ -10,9 +10,11 @@ import type { OrdersType } from '../../types/apiType';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
 import { getFirstLetters } from '../../utils/firstLetters';
 import { generateBlueGray } from '../../utils/generateBlueGray';
+import debounce from '../../utils/debounse';
 
 function OrdersPage() {
   const [orders, setOrders] = useState<OrdersType[]>([]);
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -29,6 +31,26 @@ function OrdersPage() {
 
     fetchOrder();
   }, []);
+
+  const debouncedSetSearch = debounce((value: string) => {
+    setDebouncedSearchValue(value);
+  }, 300);
+
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
+    const value = event.target.value;
+    debouncedSetSearch(value);
+  };
+
+  const filteredOrders = useMemo(() => {
+    const searchValue = debouncedSearchValue.toLocaleLowerCase().trim();
+
+    if (!searchValue) return orders;
+
+    return orders.filter((order) => {
+      const fields = [order.userFullName, order.userEmail, order.userPhoneNumber];
+      return fields.some((field) => field?.toLocaleLowerCase().includes(searchValue));
+    });
+  }, [orders, debouncedSearchValue]);
 
   const columns: TableColumn<OrdersType>[] = [
     {
@@ -85,14 +107,14 @@ function OrdersPage() {
           subtitle="Каждая строка — отдельная покупка (участник может купить только 1 товар за раз)"
         />
         <div className={pageStyle['search']}>
-          <Input placeholder="Поиск по участнику или товару..." type="search" />
+          <Input placeholder="Поиск по участнику или товару..." type="search" onChange={handleSearch} />
         </div>
       </div>
       <Table
         title="Каталог"
         countElements={`${orders.length} позиций`}
         columns={columns}
-        data={orders}
+        data={filteredOrders}
         link={(order) => `/admin/orders/${order.orderId}`}
       />
     </section>
