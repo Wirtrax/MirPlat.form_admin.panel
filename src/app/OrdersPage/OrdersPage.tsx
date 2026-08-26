@@ -6,10 +6,13 @@ import { getOrders } from '../../service/api';
 import type { TableColumn } from '../../components/Table/tableProps';
 import s from './OrdersPage.module.scss';
 import pageStyle from '../Page.module.scss';
-import type { OrdersTypeOlder } from '../../types/apiType';
+import type { OrdersType } from '../../types/apiType';
+import StatusBadge from '../../components/StatusBadge/StatusBadge';
+import { getFirstLetters } from '../../utils/firstLetters';
+import { generateBlueGray } from '../../utils/generateBlueGray';
 
-function OrderPage() {
-  const [order, setOrder] = useState<OrdersTypeOlder[]>([]);
+function OrdersPage() {
+  const [orders, setOrders] = useState<OrdersType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -17,7 +20,7 @@ function OrderPage() {
       setLoading(true);
       try {
         const data = await getOrders();
-        setOrder(data);
+        setOrders(data);
       } catch (error) {
       } finally {
         setLoading(false);
@@ -27,26 +30,49 @@ function OrderPage() {
     fetchOrder();
   }, []);
 
-  const columns: TableColumn<OrdersTypeOlder>[] = [
+  const columns: TableColumn<OrdersType>[] = [
     {
-      key: 'name',
-      title: 'Название',
+      key: 'orderId',
+      title: '№ заказа',
       render: (_, item) => {
-        return <span className={s['table__name']}>{item.name}</span>;
+        return <span className={s['table__order-id']}>#{item.orderId}</span>;
       },
     },
     {
-      key: 'full_name',
-      title: 'Заказчик',
+      key: 'itemName',
+      title: 'Товар',
       render: (_, item) => {
-        return <span className={s['table__price']}>{item.full_name}</span>;
+        return <span className={s['table__product-name']}>{item.itemName}</span>;
       },
     },
     {
-      key: 'count',
-      title: 'Количество',
+      key: 'userFullName',
+      title: 'Участник',
       render: (_, item) => {
-        return <span className={s['table__price']}>{item.count}</span>;
+        return (
+          <div className={s['table__participant']}>
+            <span style={{ backgroundColor: generateBlueGray() }} className={s['table__initials']}>
+              {getFirstLetters(item.userFullName, 2)}
+            </span>
+            <span>
+              <span className={s['table__participant-name']}>{item.userFullName}</span>
+              <span className={s['table__participant-contacts']}>
+                {item.userEmail} · {item.userPhoneNumber}
+              </span>
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      key: 'status',
+      title: 'Статус',
+      render: (_, item) => {
+        return (
+          <StatusBadge
+            variant={item.status == 'waiting' ? 'pending' : item.status == 'received' ? 'received' : 'cancelled'}
+          />
+        );
       },
     },
   ];
@@ -54,14 +80,23 @@ function OrderPage() {
   return (
     <section>
       <div className={pageStyle['header']}>
-        <Title title="Товары" subtitle="Каталог наград, доступных за баллы — нажмите на товар для редактирования" />
+        <Title
+          title="Все заказы"
+          subtitle="Каждая строка — отдельная покупка (участник может купить только 1 товар за раз)"
+        />
         <div className={pageStyle['search']}>
-          <Input placeholder="поиск по названию" type="search" />
+          <Input placeholder="Поиск по участнику или товару..." type="search" />
         </div>
       </div>
-      <Table title="Каталог" countElements={`${order.length} позиций`} columns={columns} data={order} />
+      <Table
+        title="Каталог"
+        countElements={`${orders.length} позиций`}
+        columns={columns}
+        data={orders}
+        link={(order) => `/admin/orders/${order.orderId}`}
+      />
     </section>
   );
 }
 
-export default OrderPage;
+export default OrdersPage;
