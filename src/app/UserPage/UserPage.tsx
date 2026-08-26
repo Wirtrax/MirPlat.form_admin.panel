@@ -5,7 +5,7 @@ import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/S
 import SubstrateForUser from '../../components/SubstrateAdmin/SubstrateForUser/SubstrateForUser';
 import { useEffect, useState } from 'react';
 import type { User } from '../../types/apiType';
-import { deleteUser, getUsers, updateUser } from '../../service/api';
+import { getUser, updateUser } from '../../service/api';
 import { getFirstLetters } from '../../utils/firstLetters';
 import s from './UserPage.module.scss';
 import SelectAdmin from '../../components/Select/SelectAdmin';
@@ -15,7 +15,8 @@ import ChekboxAdmin from '../../components/Chekbox/ChekboxAdmin';
 
 function UserPage() {
   const { id } = useParams();
-  const [user, setUser] = useState<User | null>(null);
+  const userId = Number(id);
+  const [user, setUser] = useState<User>();
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -31,52 +32,45 @@ function UserPage() {
     is_admin: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  //область хи-хи ха-ха о которой я узнал 18 числа в 21:00
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const data = await getUsers();
-        const foundUser = data.find((user) => user.id === Number(id));
-        if (foundUser) {
-          setUser(foundUser);
-          setFormData({
-            first_name: foundUser.first_name || '',
-            last_name: foundUser.last_name || '',
-            patronym: foundUser.patronym || '',
-            telegram_id: foundUser.telegram_id || '',
-            specialization: foundUser.specialization || '',
-            programming_level: foundUser.programming_level || '',
-            email: foundUser.email || '',
-            phone_number: foundUser.phone_number || '',
-            balance: foundUser.balance || 0,
-            profile_picture: foundUser.profile_picture || '',
-            send_notifications: foundUser.send_notifications || false,
-            is_admin: foundUser.is_admin || false,
-          });
-        } else {
-          setUser(null);
-        }
+        setIsLoading(true);
+        const data = await getUser(userId);
+        setUser(data);
+        setFormData({
+          first_name: data.first_name || '',
+          last_name: data.last_name || '',
+          patronym: data.patronym || '',
+          telegram_id: data.telegram_id || '',
+          specialization: data.specialization || '',
+          programming_level: data.programming_level || '',
+          email: data.email || '',
+          phone_number: data.phone_number || '',
+          balance: data.balance || 0,
+          profile_picture: data.profile_picture || '',
+          send_notifications: data.send_notifications || false,
+          is_admin: data.is_admin || false,
+        });
       } catch (error) {
         console.log('пользователь не найден');
-        setUser(null);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchUser();
   }, [id]);
 
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
   if (!user) {
     return <div>Пользователь не найден</div>;
   }
-
-  const handleDeleteUser = async (id: number) => {
-    try {
-      const response = await deleteUser(id);
-      console.log('пользователь удален успешно', response);
-    } catch (error) {
-      console.log('ошибка удаления', error);
-    }
-  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }
@@ -128,9 +122,6 @@ function UserPage() {
             </dl>
           </dd>
         </dl>
-        <AdminButton className={s['substrate__delete-btn']} onClick={() => handleDeleteUser(user.id)}>
-          удалить
-        </AdminButton>
       </SubstrateForUser>
       <SubstrateForFrom title="Данные пользователя">
         <form className={s['form']}>

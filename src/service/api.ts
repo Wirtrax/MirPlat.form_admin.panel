@@ -129,15 +129,11 @@ export const getUsers = () => {
   );
 };
 
-export const deleteUser = (
-  id: number
-): Promise<{
-  success: boolean;
-}> => {
-  return request(
+export const getUser = (id: number) => {
+  return request<User>(
     `/users/${id}`,
     {
-      method: 'DELETE',
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
       },
@@ -145,6 +141,23 @@ export const deleteUser = (
     'admin'
   );
 };
+
+// export const deleteUser = (
+//   id: number
+// ): Promise<{
+//   success: boolean;
+// }> => {
+//   return request(
+//     `/users/${id}`,
+//     {
+//       method: 'DELETE',
+//       headers: {
+//         Authorization: `Bearer ${getAuthToken()}`,
+//       },
+//     },
+//     'admin'
+//   );
+// };
 
 export const updateUser = (
   id: number,
