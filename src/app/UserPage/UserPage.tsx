@@ -9,8 +9,8 @@ import { deleteUser, getUsers, updateUser } from '../../service/api';
 import { getFirstLetters } from '../../utils/firstLetters';
 import s from './UserPage.module.scss';
 import SelectAdmin from '../../components/Select/SelectAdmin';
-import { specializationOptions } from '../../components/Select/specializationOptions';
-import { levelOptions } from '../../components/Select/programmingLeveloptions';
+import { specializationOptions } from '../../constants/specializationOptions';
+import { levelOptions } from '../../constants/programmingLeveloptions';
 import ChekboxAdmin from '../../components/Chekbox/ChekboxAdmin';
 
 function UserPage() {

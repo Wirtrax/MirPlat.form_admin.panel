@@ -1,4 +1,4 @@
-import type { User, Product, OrdersTypeOlder } from '../types/apiType';
+import type { User, Product, AttemptsType, AttemptsTypeFullInformation, OrdersType } from '../types/apiType';
 import { request } from './utils/query';
 import { getAuthToken, setAuthToken } from './utils/authToken';
 
@@ -167,8 +167,65 @@ export const updateUser = (
 
 // заказы - order
 export const getOrders = () => {
-  return request<OrdersTypeOlder[]>(
+  return request<OrdersType[]>(
     '/orders',
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    },
+    'admin'
+  );
+};
+export const getOrder = (id: number) => {
+  return request<OrdersType>(
+    `/orders/${id}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    },
+    'admin'
+  );
+};
+
+export const updateOrder = (
+  id: number,
+  data: Partial<OrdersType>
+): Promise<{
+  success: boolean;
+}> => {
+  return request(
+    `/orders/${id}/status`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      data,
+    },
+    'admin'
+  );
+};
+// попытки в играх - attempts
+export const getAttempts = () => {
+  return request<AttemptsType[]>(
+    '/attempts',
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    },
+    'admin'
+  );
+};
+
+export const getAttempt = (id: number) => {
+  return request<AttemptsTypeFullInformation>(
+    `/attempts/${id}`,
     {
       method: 'GET',
       headers: {

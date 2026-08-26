@@ -1,0 +1,31 @@
+.table {
+    &__order-id {}
+
+    &__product-name {
+        font-weight: 500;
+    }
+
+    &__initials {
+        padding: rem(7);
+        border-radius: rem(7);
+        color: var(--color-light);
+        font-weight: 400;
+    }
+
+    &__participant {
+        display: flex;
+        align-items: center;
+        gap: rem(7);
+
+        &-name {
+            display: block;
+            font-weight: 500;
+        }
+
+        &-contacts {
+            color: var(--color-gray-60);
+            font-size: rem(12);
+        }
+    }
+
+}

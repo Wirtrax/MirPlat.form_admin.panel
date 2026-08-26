@@ -8,12 +8,15 @@ import ItemsPage from './app/ItemsPage/ItemsPage';
 import OrdersPage from './app/OrdersPage/OrdersPage';
 import UserPage from './app/UserPage/UserPage';
 import ItemPage from './app/ItemPage/ItemPage';
+import AttemptsPage from './app/AttemptsPage/AttemptsPage';
+import AttemptPage from './app/AttemptPage/AttemptPage';
+import OrderPage from './app/OrderPage/OrderPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Navigate to="/admin/registration" replace />} />
-      {/* Публичный роут для входа админа — отдельный guard, не зависит от обычного user */}
+      {/* Публичный роут для входа админа */}
       <Route element={<PublicAdminRoute />}>
         <Route path="/admin/registration" element={<AdminLoginForm />} />
       </Route>
@@ -22,10 +25,16 @@ const router = createBrowserRouter(
       <Route element={<ProtectedAdminRoute />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="/admin/users" element={<UsersPage />} />
-          <Route path="/admin/items" element={<ItemsPage />} />
-          <Route path="/admin/orders" element={<OrdersPage />} />
           <Route path="/admin/user/:id" element={<UserPage />} />
+
+          <Route path="/admin/items" element={<ItemsPage />} />
           <Route path="/admin/items/:id" element={<ItemPage />} />
+
+          <Route path="/admin/orders" element={<OrdersPage />} />
+          <Route path="/admin/orders/:id" element={<OrderPage />} />
+
+          <Route path="/admin/attempts" element={<AttemptsPage />} />
+          <Route path="/admin/attempts/:id" element={<AttemptPage />} />
         </Route>
       </Route>
     </>

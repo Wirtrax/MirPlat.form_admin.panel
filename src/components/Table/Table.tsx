@@ -1,7 +1,9 @@
 import type { TableProps } from './tableProps';
 import s from './Table.module.scss';
+import { useNavigate } from 'react-router-dom';
 
-const Table = <T extends object>({ title, countElements, columns, data }: TableProps<T>) => {
+const Table = <T extends object>({ title, countElements, columns, data, link }: TableProps<T>) => {
+  const navigate = useNavigate();
   return (
     <div className={s.table}>
       <div className={s.table__header}>
@@ -22,7 +24,15 @@ const Table = <T extends object>({ title, countElements, columns, data }: TableP
 
         <tbody className={s.table__body}>
           {data.map((item, rowIndex) => (
-            <tr key={rowIndex} className={s.table__row}>
+            <tr
+              key={rowIndex}
+              className={s.table__row}
+              onClick={() => {
+                if (link) {
+                  const url = typeof link === 'function' ? link(item) : link;
+                  navigate(url);
+                }
+              }}>
               {columns.map((column) => {
                 const value = item[column.key];
 

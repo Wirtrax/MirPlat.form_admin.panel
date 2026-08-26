@@ -8,6 +8,8 @@ export type Product = {
   is_active: boolean;
 };
 
+type PurchaseStatus = 'waiting' | 'received' | 'canceled';
+
 export type createOrderResponse = {
   code: string;
   id: number;
@@ -16,6 +18,14 @@ export type createOrderResponse = {
   user: User;
 };
 
+export interface OrdersType {
+  orderId: number;
+  itemName: string;
+  status: PurchaseStatus;
+  userEmail: string;
+  userFullName: string;
+  userPhoneNumber: string;
+}
 export interface CreateUser {
   first_name: string;
   last_name: string;
@@ -37,10 +47,18 @@ export interface User extends CreateUser {
   attempts: any[];
 }
 
-export interface OrdersTypeOlder {
-  user_id: number;
-  item_id: number;
-  name: string;
+type AttemptStatus = 'accepted' | 'waiting' | 'declined';
+
+export type AttemptsType = {
+  id: number;
   full_name: string;
-  count: number;
+  activity: number;
+  status: AttemptStatus;
+  reward: number;
+};
+export interface AttemptsTypeFullInformation extends AttemptsType {
+  userPhoneNumber: string;
+  userEmail: string;
+  reward: number;
+  link: string;
 }

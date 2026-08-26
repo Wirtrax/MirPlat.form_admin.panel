@@ -11,5 +11,5 @@ export interface TableProps<T extends object> {
   countElements: string;
   columns: TableColumn<T>[];
   data: T[];
-  link?: To;
+  link?: string | ((item: T) => string);
 }

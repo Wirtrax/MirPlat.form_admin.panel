@@ -11,12 +11,10 @@ import pageStyle from '../Page.module.scss';
 import clsx from 'clsx';
 import { getFirstLetters } from '../../utils/firstLetters';
 import { generateBlueGray } from '../../utils/generateBlueGray';
-import { useNavigate } from 'react-router-dom';
 
 function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -39,7 +37,7 @@ function UsersPage() {
       title: 'ФИО',
       render: (_, item) => {
         return (
-          <span className={s['table__initials']} onClick={() => navigate(`/admin/user/${item.id}`)}>
+          <span className={s['table__initials']}>
             <span style={{ backgroundColor: generateBlueGray() }} className={s['table__initials-letter']}>
               {getFirstLetters(`${item.last_name} ${item.first_name}`)}
             </span>
@@ -105,7 +103,13 @@ function UsersPage() {
           <AdminButton withPlus>добавить</AdminButton>
         </div>
       </div>
-      <Table title="Список пользователей" countElements={`${users.length} записей`} columns={columns} data={users} />
+      <Table
+        title="Список пользователей"
+        countElements={`${users.length} записей`}
+        columns={columns}
+        data={users}
+        link={(user) => `/admin/user/${user.id}`}
+      />
     </section>
   );
 }

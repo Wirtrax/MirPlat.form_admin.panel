@@ -1,0 +1,25 @@
+.table {
+    &__name {
+        display: flex;
+        align-items: center;
+        gap: rem(10);
+
+        &-initial {
+            padding: rem(10);
+            border-radius: rem(10);
+            color: var(--color-light);
+            font-weight: 500;
+        }
+    }
+
+    &__full-name {
+        font-weight: 500;
+        word-wrap: break-word;
+    }
+
+    &__reward {
+        display: flex;
+        align-items: center;
+        column-gap: rem(5);
+    }
+}

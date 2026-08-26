@@ -9,7 +9,6 @@ import type { TableColumn } from '../../components/Table/tableProps';
 import s from './ItemsPage.module.scss';
 import pageStyle from '../Page.module.scss';
 import type { Product } from '../../types/apiType';
-import { useNavigate } from 'react-router-dom';
 import CreateItemModal from '../CreateItemModal/CreateItemModal';
 import debounce from '../../utils/debounse';
 
@@ -19,7 +18,6 @@ function ItemsPage() {
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -59,11 +57,7 @@ function ItemsPage() {
       key: 'name',
       title: 'Название',
       render: (_, item) => {
-        return (
-          <span className={s['table__name']} onClick={() => navigate(`/admin/items/${item.id}`)}>
-            {item.name}
-          </span>
-        );
+        return <span className={s['table__name']}>{item.name}</span>;
       },
     },
     {
@@ -104,7 +98,13 @@ function ItemsPage() {
           </AdminButton>
         </div>
       </div>
-      <Table title="Каталог" countElements={`${items.length} позиций`} columns={columns} data={filteredItems} />
+      <Table
+        title="Каталог"
+        countElements={`${items.length} позиций`}
+        columns={columns}
+        data={filteredItems}
+        link={(items) => `/admin/items/${items.id}`}
+      />
 
       {isCreateModalOpen && (
         <CreateItemModal onClose={() => setIsCreateModalOpen(false)} onCreated={handleItemCreated} />

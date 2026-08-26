@@ -1,26 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import s from './SelectAdmin.module.scss';
 import clsx from 'clsx';
+import type { Option, SelectProps } from './SelectAdminProps';
 
-export interface Option {
-  value: string;
-  label: string;
-}
-export interface SelectProps {
-  label?: string;
-  error?: string;
-  name: string;
-  value: string;
-  options: Option[];
-  disabled?: boolean;
-
-  onChange: (e: {
-    target: {
-      name: string;
-      value: string;
-    };
-  }) => void;
-}
 export const SelectAdmin: React.FC<SelectProps> = ({ label, error, name, value, options, onChange, disabled }) => {
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
