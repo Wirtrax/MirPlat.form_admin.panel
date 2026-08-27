@@ -26,6 +26,10 @@ export interface OrdersType {
   userFullName: string;
   userPhoneNumber: string;
 }
+export interface OneOrderType extends OrdersType {
+  image: string;
+}
+
 export interface CreateUser {
   first_name: string;
   last_name: string;

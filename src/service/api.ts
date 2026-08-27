@@ -5,6 +5,7 @@ import type {
   AttemptsTypeFullInformation,
   OrdersType,
   AttemptStatus,
+  PurchaseStatus,
 } from '../types/apiType';
 import { request } from './utils/query';
 import { getAuthToken, setAuthToken } from './utils/authToken';
@@ -213,7 +214,7 @@ export const getOrder = (id: number) => {
 
 export const updateOrder = (
   id: number,
-  data: Partial<OrdersType>
+  data: { status: PurchaseStatus }
 ): Promise<{
   success: boolean;
 }> => {
