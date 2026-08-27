@@ -1,13 +1,13 @@
 .table {
     margin: 0 auto;
-    background: #ffffff;
+    background: var(--color-light);
     border-radius: rem(16);
-    box-shadow: 0 rem(2) rem(8) rgba(0, 0, 0, 0.08);
+    box-shadow: 0 rem(2) rem(8) var(--color-shadow-08);
     overflow: hidden;
 
     &__header {
         padding: rem(24) rem(32) rem(16) rem(32);
-        border-bottom: rem(1) solid #f0f0f0;
+        border-bottom: rem(1) solid var(--color-gray-95);
         display: flex;
         align-items: center;
         gap: rem(10);
@@ -20,7 +20,7 @@
         margin: 0;
         font-size: rem(22);
         font-weight: 600;
-        color: #1a1a1a;
+        color: var(--color-dark-10);
     }
 
     &__count {
@@ -40,10 +40,10 @@
     }
 
     &__head {
-        background: #fafafa;
+        background: var(--color-gray-95);
 
         .table__row {
-            border-bottom: rem(2) solid #e8e8e8;
+            border-bottom: rem(2) solid var(--color-gray-80);
         }
 
         .table__cell {
@@ -53,27 +53,27 @@
             font-size: rem(12);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #8c8c8c;
+            color: var(--color-gray-60);
             white-space: nowrap;
         }
     }
 
     &__row {
         transition: background-color 0.2s ease;
-        border-bottom: rem(1) solid #f0f0f0;
+        border-bottom: rem(1) solid var(--color-gray-95);
 
         &:last-child {
             border-bottom: none;
         }
 
         &:hover {
-            background-color: #F7F9FF;
+            background-color: var(--color-gray-95);
         }
     }
 
     &__cell {
         padding: rem(16);
-        color: #262626;
+        color: var(--color-dark-15);
         vertical-align: middle;
     }
 }

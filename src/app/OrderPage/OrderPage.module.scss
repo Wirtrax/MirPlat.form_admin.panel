@@ -12,7 +12,7 @@
         width: rem(56);
         height: rem(56);
         border-radius: rem(16);
-        background: linear-gradient(180deg, #7a7f8c 0%, #4b4f58 100%);
+        background: linear-gradient(180deg, var(--color-gray-48) 0%, var(--color-gray-35) 100%);
         overflow: hidden;
         flex-shrink: 0;
 
@@ -34,13 +34,13 @@
     &__name {
         font-size: rem(22);
         font-weight: 700;
-        color: #fff;
+        color: var(--color-light);
     }
 
     &__details {
         margin: rem(4) 0 0;
         font-size: rem(14);
-        color: rgba(255, 255, 255, 0.8);
+        color: var(--color-overlay-white-80);
     }
 }
 
@@ -64,7 +64,7 @@
         width: rem(56);
         height: rem(56);
         border-radius: rem(16);
-        background: linear-gradient(180deg, #7a7f8c 0%, #4b4f58 100%);
+        background: linear-gradient(180deg, var(--color-gray-48) 0%, var(--color-gray-35) 100%);
         overflow: hidden;
         flex-shrink: 0;
 
@@ -79,7 +79,7 @@
         margin: 0;
         font-size: rem(18);
         font-weight: 700;
-        color: #1a1a1a;
+        color: var(--color-dark-10);
     }
 }
 
@@ -93,7 +93,7 @@
         font-weight: 600;
         letter-spacing: 0.02em;
         text-transform: uppercase;
-        color: #8a8f98;
+        color: var(--color-gray-60);
     }
 
     &__controls {
@@ -109,7 +109,7 @@
 
     &__endpoint {
         font-size: rem(12);
-        color: #b0b4bb;
+        color: var(--color-gray-75);
     }
 }
 
@@ -119,7 +119,7 @@
     gap: rem(12);
     padding: rem(12);
     border-radius: rem(16);
-    background: #f3f4fb;
+    background: var(--color-gray-95);
     margin-bottom: rem(16);
 
     &__avatar {
@@ -129,7 +129,7 @@
         width: rem(40);
         height: rem(40);
         border-radius: rem(12);
-        color: #fff;
+        color: var(--color-light);
         font-size: rem(13);
         font-weight: 700;
         flex-shrink: 0;
@@ -143,13 +143,13 @@
         margin: 0;
         font-size: rem(14);
         font-weight: 700;
-        color: #1a1a1a;
+        color: var(--color-dark-10);
     }
 
     &__contact {
         margin: rem(2) 0 0;
         font-size: rem(13);
-        color: #6b7280;
+        color: var(--color-gray-45);
     }
 
     &__link {
@@ -158,7 +158,7 @@
         padding: 0;
         font-size: rem(14);
         font-weight: 600;
-        color: #1a1a1a;
+        color: var(--color-dark-10);
         text-align: left;
         cursor: pointer;
 

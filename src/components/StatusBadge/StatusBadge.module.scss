@@ -20,31 +20,31 @@
 }
 
 .status--pending {
-  color: #b7791f;
-  background-color: #fdf2e3;
+  color: var(--color-status-amber);
+  background-color: var(--color-status-amber-bg);
 }
 
 .status--received {
-  color: #2b6cb0;
-  background-color: #e8f1fd;
+  color: var(--color-status-blue);
+  background-color: var(--color-status-blue-bg);
 }
 
 .status--cancelled {
-  color: #d64545;
-  background-color: #fdeaea;
+  color: var(--color-status-red);
+  background-color: var(--color-status-red-bg);
 }
 
 .status--active {
-  color: #2f9e58;
-  background-color: #e7f7ed;
+  color: var(--color-status-green);
+  background-color: var(--color-status-green-bg);
 }
 
 .status--hidden {
-  color: #6b7280;
-  background-color: #eef0f2;
+  color: var(--color-gray-45);
+  background-color: var(--color-gray-95);
 }
 
 .status--admin {
-  color: #2b6cb0;
-  background-color: #e8f1fd;
+  color: var(--color-status-blue);
+  background-color: var(--color-status-blue-bg);
 }

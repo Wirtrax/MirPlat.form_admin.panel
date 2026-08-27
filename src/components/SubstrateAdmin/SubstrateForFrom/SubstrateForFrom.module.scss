@@ -1,6 +1,6 @@
 .substrate {
     background: var(--color-light);
-    border: rem(1) solid #e9ecef;
+    border: rem(1) solid var(--color-gray-80);
     border-radius: rem(8);
     padding: rem(16);
     margin-bottom: rem(16);
@@ -13,10 +13,10 @@
 .title {
     font-size: rem(14);
     font-weight: 600;
-    color: #495057;
+    color: var(--color-gray-35);
     margin: 0 0 rem(12) 0;
     padding-bottom: rem(8);
-    border-bottom: rem(1) solid #e9ecef;
+    border-bottom: rem(1) solid var(--color-gray-80);
     letter-spacing: rem(0.2);
 
     display: flex;
@@ -37,9 +37,9 @@
 
     >* {
         font-size: rem(12);
-        color: #212529;
+        color: var(--color-dark-10);
         padding: rem(4) 0;
-        border-bottom: rem(1) solid #f1f3f5;
+        border-bottom: rem(1) solid var(--color-gray-95);
 
         &:last-child {
             border-bottom: none;

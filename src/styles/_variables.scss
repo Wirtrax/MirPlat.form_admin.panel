@@ -7,28 +7,82 @@
   --color-dark-30: #3F4045; // Тёмно-серый — для второстепенного текста
 
   // ===== СЕРЫЕ =====
+  --color-gray-35: #4b4f58; // Тёмно-серый — градиент аватаров (OrderPage)
+  --color-gray-45: #6b7280; // Серый — второстепенный текст (контакты покупателя)
+  --color-gray-48: #7a7f8c; // Серый — градиент аватаров (OrderPage)
   --color-gray-50: #888888; // Серый — для текста и иконок (средний)
+  --color-gray-52: #718096; // Серо-синий — второстепенный текст (детали, контакты)
   --color-gray-60: #8C8C8C; // Серый — для разделителей
+  --color-gray-65: #a0aec0; // Серо-голубой — подписи/лейблы (uppercase-метки)
   --color-gray-70: #BEBEBE;
+  --color-gray-75: #b0b4bb; // Серый — второстепенный текст (эндпоинт статуса)
   --color-gray-80: #e2e1e1;
   --color-gray-90: #f3f3f35d;
+  --color-gray-95: #F6F8FC; // Очень светлый серо-голубой — фон страниц/карточек
+
+  // ===== ТЁМНЫЕ =====
+  --color-dark-10: #1a1a1a; // Почти чёрный — заголовки (OrderPage)
+  --color-dark-15: #262626; // Тёмно-серый — текст ячеек таблицы
 
   // ===== СИНИЕ (для фонов и подложек) =====
   --color-slate-blue: #1f2937;
   --color-dark-blue: #1543CD;
+  --color-navy: #1631a8;
   --color-blue: #2e5bd0;
   --color-ocean-blue: #01ABFD;
   --color-dodger-blue: #1CA3F4;
   --color-light-blue: #a5dafb;
   --color-super-light-blue: #e7f6ff;
 
+  // ===== СТАТУСЫ (бейджи) =====
+  --color-status-amber: #b7791f; // Текст статуса "в ожидании"
+  --color-status-amber-bg: #fdf2e3; // Фон статуса "в ожидании"
+  --color-status-blue: #2b6cb0; // Текст статуса "получен" / "админ"
+  --color-status-blue-bg: #e8f1fd; // Фон статуса "получен" / "админ"
+  --color-status-red: #d64545; // Текст статуса "отменён"
+  --color-status-red-bg: #fdeaea; // Фон статуса "отменён"
+  --color-status-green: #2f9e58; // Текст статуса "активен"
+  --color-status-green-bg: #e7f7ed; // Фон статуса "активен"
+
   // ===== АКЦЕНТНЫЕ =====
   --color-accent: #ffab36; // Оранжевый — акцентные кнопки, иконки
   --color-alternative-accent: #FFB34A; // Светло-оранжевый — дополнительные акценты
   --color-accent-inactive: #ffd59b; // Бледный — акценты в пассивном состоянии
+  --color-orange-deep: #ff8a00; // Насыщенный оранжевый — градиент иконки лого (SideBar)
+
+  // ===== ФОРМЫ (Input/Select/Textarea) =====
+  --color-form-border-focus: #cbd5e1; // Голубовато-серый — рамка поля в фокусе
+  --color-form-selected-bg: #eef2ff; // Светло-индиговый — фон выбранного пункта select
+  --color-error: #f04438; // Красный — ошибки валидации в полях форм
 
   // ===== ОШИБКИ =====
   --color-red: #f00; // Красный — ошибки, валидация
+  --color-danger: rgb(223, 0, 0); // Тёмно-красный — текст/иконки ошибок (кнопки удаления)
+  --color-danger-bg: #ffe1e1; // Светло-розовый — фон блоков/кнопок ошибок
+  --color-danger-border: #ffd5d5; // Розовый — hover-фон кнопок ошибок
+  --color-danger-glow: rgba(252, 92, 125, 0.4); // Розовое свечение — hover-тень кнопок ошибок
+
+  // ===== ПРОЗРАЧНЫЕ / ТЕНИ =====
+  --color-shadow: rgba(0, 0, 0, 0.18); // Тень карточек
+  --color-shadow-04: rgba(0, 0, 0, 0.04); // Лёгкая тень — поля форм
+  --color-shadow-06: rgba(0, 0, 0, 0.06); // Тень — выпадающее меню select
+  --color-shadow-08: rgba(0, 0, 0, 0.08); // Тень — фокус полей, таблица, меню select
+  --color-shadow-10: rgba(0, 0, 0, 0.1); // Тень — карточка заказа
+  --color-shadow-15: rgba(0, 0, 0, 0.15); // Тень — карточка заказа (hover)
+  --color-card-shadow: rgba(14, 143, 224, 0.25); // Синяя тень — StatCard
+  --color-overlay-light: #ffffff41; // Полупрозрачный белый — подложка аватаров
+  --color-overlay-white-80: rgba(255, 255, 255, 0.8); // Белый 80% — второстепенный текст на цветном фоне
+  --color-indigo-30: rgba(102, 126, 234, 0.3); // Индиго 30% — тень/свечение аватаров
+
+  // ===== БЕЛЫЙ С ПРОЗРАЧНОСТЬЮ (тексты/фоны на тёмных подложках) =====
+  --color-white-a08: rgba(255, 255, 255, 0.08); // SideBar — hover пункта меню
+  --color-white-a12: rgba(255, 255, 255, 0.12); // SideBar — граница футера
+  --color-white-a16: rgba(255, 255, 255, 0.16); // SideBar — активный пункт меню
+  --color-white-a18: rgba(255, 255, 255, 0.18); // SideBar — фон бейджа
+  --color-white-a50: rgba(255, 255, 255, 0.5); // StatCard — иконка
+  --color-white-a60: rgba(255, 255, 255, 0.6); // SideBar — второстепенный текст
+  --color-white-a75: rgba(255, 255, 255, 0.75); // SideBar — текст пункта меню
+  --color-white-a85: rgba(255, 255, 255, 0.85); // StatCard — заголовок
 
   // ===== ФОНЫ =====
   --background-color: #00A9FB; // Базовый цвет фона

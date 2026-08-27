@@ -6,8 +6,8 @@
     min-height: 100vh;
     padding: rem(24) rem(16);
 
-    background: linear-gradient(180deg, #1d3fd6 0%, #1631a8 100%);
-    color: #ffffff;
+    background: linear-gradient(180deg, var(--color-dark-blue) 0%, var(--color-navy) 100%);
+    color: var(--color-light);
 
     &__logo {
         display: flex;
@@ -26,8 +26,8 @@
         height: rem(40);
         border-radius: rem(10);
 
-        background: linear-gradient(135deg, #ffb84d 0%, #ff8a00 100%);
-        color: #1f2937;
+        background: linear-gradient(135deg, var(--color-alternative-accent) 0%, var(--color-orange-deep) 100%);
+        color: var(--color-slate-blue);
         font-weight: 800;
         font-size: rem(14);
 
@@ -52,7 +52,7 @@
     &__logo-subtitle {
         font-size: rem(11);
         letter-spacing: 0.04em;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--color-white-a60);
     }
 
     &__nav {
@@ -70,7 +70,7 @@
         padding: rem(12) rem(14);
         border-radius: rem(10);
 
-        color: rgba(255, 255, 255, 0.75);
+        color: var(--color-white-a75);
         font-size: rem(14);
         font-weight: 500;
         text-decoration: none;
@@ -78,13 +78,13 @@
         transition: background-color 0.15s ease, color 0.15s ease;
 
         &:hover {
-            background-color: rgba(255, 255, 255, 0.08);
-            color: #ffffff;
+            background-color: var(--color-white-a08);
+            color: var(--color-light);
         }
 
         &--active {
-            background-color: rgba(255, 255, 255, 0.16);
-            color: #ffffff;
+            background-color: var(--color-white-a16);
+            color: var(--color-light);
             font-weight: 600;
 
             &::before {
@@ -96,7 +96,7 @@
                 width: rem(4);
                 height: rem(22);
                 border-radius: 0 rem(4) rem(4) 0;
-                background-color: #ffb84d;
+                background-color: var(--color-alternative-accent);
             }
         }
     }
@@ -130,7 +130,7 @@
         padding: 0 rem(6);
         border-radius: rem(999);
 
-        background-color: rgba(255, 255, 255, 0.18);
+        background-color: var(--color-white-a18);
         font-size: rem(12);
         font-weight: 600;
     }
@@ -155,7 +155,7 @@
         align-items: center;
         gap: rem(10);
         padding-top: rem(16);
-        border-top: rem(1) solid rgba(255, 255, 255, 0.12);
+        border-top: rem(1) solid var(--color-white-a12);
     }
 
     &__avatar {
@@ -168,8 +168,8 @@
         height: rem(36);
         border-radius: rem(10);
 
-        background-color: #2fb8f5;
-        color: #ffffff;
+        background-color: var(--color-dodger-blue);
+        color: var(--color-light);
         font-size: rem(13);
         font-weight: 700;
 
@@ -193,7 +193,7 @@
 
     &__profile-role {
         font-size: rem(11);
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--color-white-a60);
     }
 
     &__logout-btn {

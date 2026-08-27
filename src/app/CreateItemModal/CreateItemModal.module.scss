@@ -27,8 +27,8 @@
 
     &__error {
         margin: 0;
-        color: rgb(223, 0, 0);
-        background: #ffe1e1;
+        color: var(--color-danger);
+        background: var(--color-danger-bg);
         padding: rem(8) rem(12);
         border-radius: rem(8);
         font-size: rem(13);

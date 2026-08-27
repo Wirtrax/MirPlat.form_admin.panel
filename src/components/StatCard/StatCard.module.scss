@@ -13,7 +13,7 @@
     border-radius: rem(16);
 
     background-color: var(--background-color);
-    box-shadow: 0 rem(4) rem(14) rgba(14, 143, 224, 0.25);
+    box-shadow: 0 rem(4) rem(14) var(--color-card-shadow);
 }
 
 .header {
@@ -26,14 +26,14 @@
 .title {
     font-size: rem(13);
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--color-white-a85);
 }
 
 .icon {
     flex-shrink: 0;
     width: rem(28);
     height: rem(28);
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--color-white-a50);
 
     img,
     svg {
@@ -47,5 +47,5 @@
     font-size: rem(28);
     font-weight: 700;
     line-height: 1.2;
-    color: #ffffff;
+    color: var(--color-light);
 }

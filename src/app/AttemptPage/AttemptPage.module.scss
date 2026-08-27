@@ -17,16 +17,16 @@
         min-width: rem(48);
         height: rem(48);
         margin: 0;
-        background: #ffffff41;
-        border: 1px solid #ffffff;
+        background: var(--color-overlay-light);
+        border: 1px solid var(--color-light);
         border-radius: rem(8);
-        color: #ffffff;
+        color: var(--color-light);
         font-weight: 600;
         font-size: rem(18);
         text-transform: uppercase;
         user-select: none;
         flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 12px var(--color-indigo-30);
     }
 
     &__info-container {
@@ -56,7 +56,7 @@
         align-items: center;
         gap: rem(8);
         font-size: rem(13);
-        color: #718096;
+        color: var(--color-gray-52);
         font-weight: 400;
         flex-wrap: wrap;
     }
@@ -86,7 +86,7 @@
 
     &__caption {
         font-size: rem(13);
-        color: #718096;
+        color: var(--color-gray-52);
     }
 }
 
@@ -100,7 +100,7 @@
         font-weight: 600;
         letter-spacing: 0.5px;
         text-transform: uppercase;
-        color: #a0aec0;
+        color: var(--color-gray-65);
         margin-top: rem(8);
 
         &:first-child {
@@ -112,7 +112,7 @@
         margin: 0;
         font-size: rem(15);
         font-weight: 500;
-        color: var(--color-dark, #1a202c);
+        color: var(--color-slate-blue);
     }
 }
 
@@ -121,7 +121,7 @@
     align-items: center;
     gap: rem(12);
     padding: rem(12) rem(16);
-    background: #f7f8fa;
+    background: var(--color-gray-95);
     border-radius: rem(12);
 
     &__avatar {
@@ -131,7 +131,7 @@
         min-width: rem(40);
         height: rem(40);
         border-radius: rem(8);
-        color: #ffffff;
+        color: var(--color-light);
         font-weight: 600;
         font-size: rem(14);
         text-transform: uppercase;
@@ -150,12 +150,12 @@
         margin: 0;
         font-size: rem(14);
         font-weight: 600;
-        color: var(--color-dark, #1a202c);
+        color: var(--color-slate-blue);
     }
 
     &__contact {
         margin: 0;
         font-size: rem(13);
-        color: #718096;
+        color: var(--color-gray-52);
     }
 }
