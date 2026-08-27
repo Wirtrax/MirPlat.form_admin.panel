@@ -48,35 +48,37 @@ function AttemptsPage() {
   };
 
   const filteredAttempts = attempts.filter((item) =>
-    item.full_name.toLocaleLowerCase().includes(debouncedSearchValue.toLocaleLowerCase())
+    item.userFullName.toLocaleLowerCase().includes(debouncedSearchValue.toLocaleLowerCase())
   );
 
   const columns: TableColumn<AttemptsType>[] = [
     {
-      key: 'full_name',
+      key: 'userFullName',
       title: 'Участник',
       render: (_, item) => {
         return (
           <span className={s['table__name']}>
             <span style={{ background: generateBlueGray() }} className={s['table__name-initial']}>
-              {getFirstLetters(`${item.full_name}`, 2)}
+              {getFirstLetters(`${item.userFullName}`, 2)}
             </span>
-            <span className={s['table__full-name']}>{item.full_name}</span>
+            <span className={s['table__full-name']}>{item.userFullName}</span>
           </span>
         );
       },
     },
     {
-      key: 'activity',
+      key: 'activityName',
       title: 'Активность',
     },
     {
-      key: 'status',
+      key: 'attemptStatus',
       title: 'Статус',
       render: (_, item) => {
         return (
           <StatusBadge
-            variant={item.status == 'accepted' ? 'received' : item.status == 'declined' ? 'cancelled' : 'pending'}
+            variant={
+              item.attemptStatus == 'accepted' ? 'received' : item.attemptStatus == 'declined' ? 'cancelled' : 'pending'
+            }
           />
         );
       },
@@ -110,7 +112,7 @@ function AttemptsPage() {
         countElements={`${attempts.length} позиций`}
         columns={columns}
         data={filteredAttempts}
-        link={(attempts) => `/admin/attempts/${attempts.id}`}
+        link={(attempts) => `/admin/attempts/${attempts.attemptId}`}
       />
     </section>
   );

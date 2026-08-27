@@ -6,7 +6,7 @@ import SelectAdmin from '../../components/Select/SelectAdmin';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
 import { useEffect, useState } from 'react';
 import type { AttemptsTypeFullInformation, AttemptStatus } from '../../types/apiType';
-import { getAttempt } from '../../service/api';
+import { getAttempt, updateAttepmt } from '../../service/api';
 import { getFirstLetters } from '../../utils/firstLetters';
 import { generateBlueGray } from '../../utils/generateBlueGray';
 import { attemptStatusOptions } from '../../constants/attemptStatusOptions';
@@ -24,8 +24,9 @@ function AttemptPage() {
     const fetchAttempt = async () => {
       try {
         const data = await getAttempt(attemptId);
+        console.log(data);
         setAttempt(data);
-        setStatus(data.status);
+        setStatus(data.attemptStatus);
       } catch (error) {
         console.log('попытка не найдена');
         setAttempt(null);
@@ -46,7 +47,14 @@ function AttemptPage() {
   const handleSave = async () => {
     setIsSubmitting(true);
     try {
-      console.log('сохранение статуса попытки', attempt.id, status);
+      const response = await updateAttepmt(attempt.attemptId, { status: status });
+      if (response.success) {
+        console.log('ура ура ура');
+        setAttempt((prev) => {
+          if (prev === null) return prev;
+          return { ...prev, attemptStatus: status };
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -56,12 +64,12 @@ function AttemptPage() {
     <section>
       <SubstrateForUser className={s['substrate']}>
         <dl className={s['substrate__info-wrapper']}>
-          <dt className={s['substrate__avatar']}>{getFirstLetters(attempt.full_name)}</dt>
+          <dt className={s['substrate__avatar']}>{getFirstLetters(attempt.userFullName, 2)}</dt>
           <dd className={s['substrate__info-container']}>
             <dl className={s['substrate__user-details']}>
-              <dt className={s['substrate__full-name']}>{attempt.full_name}</dt>
+              <dt className={s['substrate__full-name']}>{attempt.userFullName}</dt>
               <dd className={s['substrate__details']}>
-                <span>ID #{attempt.id}</span>
+                <span>ID #{attempt.attemptId}</span>
               </dd>
             </dl>
           </dd>
@@ -71,18 +79,30 @@ function AttemptPage() {
       <div className={s['content']}>
         <SubstrateForFrom title="Результат игры">
           <div className={s['game-result']}>
-            <img src={attempt.link} alt="Скриншот поля Tetris" className={s['game-result__image']} />
-            <span className={s['game-result__caption']}>скриншот поля Tetris · попытка #{attempt.id}</span>
+            {attempt.link && (
+              <>
+                <img src={attempt.link} alt="Скриншот поля Tetris" className={s['game-result__image']} />
+                <span className={s['game-result__caption']}>скриншот поля Tetris · попытка #{attempt.attemptId}</span>
+              </>
+            )}
           </div>
         </SubstrateForFrom>
 
         <SubstrateForFrom title="Информация о попытке">
           <div className={s['attempt-info']}>
             <span className={s['attempt-info__label']}>Активность</span>
-            <p className={s['attempt-info__value']}>{attempt.activity}</p>
+            <p className={s['attempt-info__value']}>{attempt.activityName}</p>
 
             <span className={s['attempt-info__label']}>Статус</span>
-            {/* <StatusBadge status={attempt.status} /> */}
+            <StatusBadge
+              variant={
+                attempt.attemptStatus == 'accepted'
+                  ? 'received'
+                  : attempt.attemptStatus == 'declined'
+                    ? 'cancelled'
+                    : 'pending'
+              }
+            />
 
             <span className={s['attempt-info__label']}>Награда</span>
             <p className={s['attempt-info__value']}>+{attempt.reward} ★</p>
@@ -104,12 +124,13 @@ function AttemptPage() {
         <SubstrateForFrom title="Участник">
           <div className={s['participant']}>
             <span className={s['participant__avatar']} style={{ background: generateBlueGray() }}>
-              {getFirstLetters(attempt.full_name)}
+              {getFirstLetters(attempt.userFullName, 2)}
             </span>
             <dl className={s['participant__details']}>
-              <dt className={s['participant__name']}>{attempt.full_name}</dt>
-              <dd className={s['participant__contact']}>{attempt.userEmail}</dd>
-              <dd className={s['participant__contact']}>{attempt.userPhoneNumber}</dd>
+              <dt className={s['participant__name']}>{attempt.userFullName}</dt>
+              <dd className={s['participant__contact']}>
+                {attempt.userEmail} {attempt.userPhoneNumber}
+              </dd>
             </dl>
           </div>
         </SubstrateForFrom>

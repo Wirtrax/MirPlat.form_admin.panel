@@ -65,11 +65,11 @@
 .content {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
     gap: rem(20);
 
-    // "Результат игры" занимает всю ширину, остальные два блока делят вторую строку
     >*:first-child {
-        grid-column: 1 / -1;
+        grid-row: 1 / -1;
     }
 }
 

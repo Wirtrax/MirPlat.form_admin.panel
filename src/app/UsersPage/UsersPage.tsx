@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import AdminButton from '../../components/AdminButton/AdminButton';
+import { useEffect, useState, useMemo, type ChangeEvent } from 'react';
 import Input from '../../components/Input/AdminInput';
 import Table from '../../components/Table/Table';
 import Title from '../../components/Title/Title';
@@ -11,9 +10,11 @@ import pageStyle from '../Page.module.scss';
 import clsx from 'clsx';
 import { getFirstLetters } from '../../utils/firstLetters';
 import { generateBlueGray } from '../../utils/generateBlueGray';
+import debounce from '../../utils/debounse';
 
 function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -30,6 +31,26 @@ function UsersPage() {
 
     fetchUsers();
   }, []);
+
+  const debouncedSetSearch = debounce((value: string) => {
+    setDebouncedSearchValue(value);
+  }, 300);
+
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>): void => {
+    const value = event.target.value;
+    debouncedSetSearch(value);
+  };
+
+  const filteredUsers = useMemo(() => {
+    const searchValue = debouncedSearchValue.toLocaleLowerCase().trim();
+
+    if (!searchValue) return users;
+
+    return users.filter((user) => {
+      const fields = [user.patronym, user.phone_number, user.email];
+      return fields.some((field) => field?.toLocaleLowerCase().includes(searchValue));
+    });
+  }, [users, debouncedSearchValue]);
 
   const columns: TableColumn<User>[] = [
     {
@@ -99,15 +120,14 @@ function UsersPage() {
       <div className={pageStyle['header']}>
         <Title title="Пользователи" subtitle="Нажмите на участника, чтобы открыть его страницу и изменить данные" />
         <div className={pageStyle['search']}>
-          <Input placeholder="поиск по имени, email, телефон..." type="search" />
-          <AdminButton withPlus>добавить</AdminButton>
+          <Input placeholder="поиск по имени, email, телефон..." type="search" onChange={handleSearch} />
         </div>
       </div>
       <Table
         title="Список пользователей"
         countElements={`${users.length} записей`}
         columns={columns}
-        data={users}
+        data={filteredUsers}
         link={(user) => `/admin/user/${user.id}`}
       />
     </section>
