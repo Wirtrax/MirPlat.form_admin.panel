@@ -1,4 +1,11 @@
-import type { User, Product, AttemptsType, AttemptsTypeFullInformation, OrdersType } from '../types/apiType';
+import type {
+  User,
+  Product,
+  AttemptsType,
+  AttemptsTypeFullInformation,
+  OrdersType,
+  AttemptStatus,
+} from '../types/apiType';
 import { request } from './utils/query';
 import { getAuthToken, setAuthToken } from './utils/authToken';
 
@@ -244,6 +251,25 @@ export const getAttempt = (id: number) => {
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
       },
+    },
+    'admin'
+  );
+};
+
+export const updateAttepmt = (
+  id: number,
+  data: { status: AttemptStatus }
+): Promise<{
+  success: boolean;
+}> => {
+  return request(
+    `/attempts/${id}`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      data,
     },
     'admin'
   );

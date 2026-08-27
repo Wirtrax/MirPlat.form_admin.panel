@@ -50,10 +50,10 @@ export interface User extends CreateUser {
 type AttemptStatus = 'accepted' | 'waiting' | 'declined';
 
 export type AttemptsType = {
-  id: number;
-  full_name: string;
-  activity: number;
-  status: AttemptStatus;
+  attemptId: number;
+  userFullName: string;
+  activityName: number;
+  attemptStatus: AttemptStatus;
   reward: number;
 };
 export interface AttemptsTypeFullInformation extends AttemptsType {
