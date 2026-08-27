@@ -4,8 +4,8 @@ import AdminInput from '../../components/Input/AdminInput';
 import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/SubstrateForFrom';
 import SubstrateForUser from '../../components/SubstrateAdmin/SubstrateForUser/SubstrateForUser';
 import { useEffect, useState } from 'react';
-import type { Product } from '../../types/apiType';
-import { deleteItem, getItem, hideItem, updateItem } from '../../service/api';
+import type { Product, User } from '../../types/apiType';
+import { getAllUsersByItem, getItem, hideItem, updateItem } from '../../service/api';
 import { getFirstLetters } from '../../utils/firstLetters';
 import s from './ItemPage.module.scss';
 import ChekboxAdmin from '../../components/Chekbox/ChekboxAdmin';
@@ -17,6 +17,7 @@ function ItemPage() {
   const { id } = useParams();
   const productId = Number(id);
   const [item, setItem] = useState<Product | null>(null);
+  const [usersByItem, setUsersByItem] = useState<User[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -26,6 +27,7 @@ function ItemPage() {
     is_active: true,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     const fetchItem = async () => {
       try {
@@ -48,20 +50,19 @@ function ItemPage() {
     fetchItem();
   }, [productId]);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await getAllUsersByItem(productId);
+        setUsersByItem(response);
+      } catch (error) {}
+    };
+    fetchUsers();
+  }, []);
+
   if (!item) {
     return <div>Продукт не найден</div>;
   }
-
-  const handleDeleteItem = async (id: number) => {
-    try {
-      const response = await deleteItem(id);
-      if (response.success) {
-        console.log('продукт был удален');
-      }
-    } catch (error) {
-      console.log('ошибка удаления', error);
-    }
-  };
 
   const handleHiddenItem = async (active: boolean) => {
     try {
@@ -125,9 +126,6 @@ function ItemPage() {
         <AdminButton className={s['substrate__hidden-btn']} onClick={() => handleHiddenItem(!item.is_active)}>
           {item.is_active ? 'скрыть' : 'вернуть в продажу'}
         </AdminButton>
-        <AdminButton className={s['substrate__delete-btn']} onClick={() => handleDeleteItem(item.id)}>
-          удалить
-        </AdminButton>
       </SubstrateForUser>
       <div className={s['item-info']}>
         <SubstrateForFrom title="Параметры товара">
@@ -188,21 +186,28 @@ function ItemPage() {
           </AdminButton>
         </SubstrateForFrom>
 
-        <SubstrateForFrom title="Куплено раз" count={7}>
+        <SubstrateForFrom title="Последние покупки/Куплено раз" count={usersByItem.length}>
           <ul className={s['orders-list']}>
-            <li className={s['orders-list__item']}>
-              <div className={s['orders-list__info']}>
-                <span className={s['orders-list__initials']} style={{ background: generateBlueGray() }}>
-                  {getFirstLetters('покупатель первый')}
-                </span>
-                <p className={s['orders-list__customer']}>
-                  Покупатель <span className={s['orders-list__order-number']}>#номер заказа</span>
-                </p>
-              </div>
-              <span className={s['orders-list__status']}>
-                <StatusBadge variant={true ? 'pending' : 'received'} />
-              </span>
-            </li>
+            {usersByItem.length > 0 ? (
+              usersByItem.slice(0, 7).map((user) => (
+                <li className={s['orders-list__item']}>
+                  <div className={s['orders-list__info']}>
+                    <span className={s['orders-list__initials']} style={{ background: generateBlueGray() }}>
+                      {getFirstLetters(`${user.first_name} ${user.patronym}`)}
+                    </span>
+                    <p className={s['orders-list__customer']}>
+                      {user.first_name} {user.patronym}{' '}
+                      <span className={s['orders-list__order-number']}>{user.phone_number}</span>
+                    </p>
+                  </div>
+                  <span className={s['orders-list__status']}>
+                    <StatusBadge variant={true ? 'pending' : 'received'} />
+                  </span>
+                </li>
+              ))
+            ) : (
+              <p> товар еще не покупали </p>
+            )}
           </ul>
         </SubstrateForFrom>
       </div>

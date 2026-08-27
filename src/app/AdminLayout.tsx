@@ -7,7 +7,7 @@ import UsersIcon from '../assets/ico/admin/users.svg?react';
 import GameIcon from '../assets/ico/admin/game.svg?react';
 import ProductIcon from '../assets/ico/admin/product.svg?react';
 import AllOrderIcon from '../assets/ico/admin/allOrder.svg?react';
-import LogoIcon from '../assets/ico/app/plat.romIco.png';
+import LogoIcon from '../assets/ico/app/plat.romIco.png?url';
 import { Outlet } from 'react-router-dom';
 import { downloadXLSXFile } from '../service/api';
 import { useAppDispatch } from '../hooks/redux';
