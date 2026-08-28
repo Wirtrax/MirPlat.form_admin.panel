@@ -191,6 +191,19 @@ export const getOrder = (id: number) => {
   );
 };
 
+export const getAllOrdersByItem = (id: number) => {
+  return request<OrdersType[]>(
+    `/orders/by-item/${id}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    },
+    'admin'
+  );
+};
+
 export const updateOrder = (
   id: number,
   data: { status: PurchaseStatus }

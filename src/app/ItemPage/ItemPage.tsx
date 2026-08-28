@@ -4,8 +4,8 @@ import AdminInput from '../../components/Input/AdminInput';
 import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/SubstrateForFrom';
 import SubstrateForUser from '../../components/SubstrateAdmin/SubstrateForUser/SubstrateForUser';
 import { useEffect, useState } from 'react';
-import type { Product, User } from '../../types/apiType';
-import { getAllUsersByItem, getItem, hideItem, updateItem } from '../../service/api';
+import type { OrdersType, Product } from '../../types/apiType';
+import { getAllOrdersByItem, getItem, hideItem, updateItem } from '../../service/api';
 import { getFirstLetters } from '../../utils/firstLetters';
 import s from './ItemPage.module.scss';
 import ChekboxAdmin from '../../components/Chekbox/ChekboxAdmin';
@@ -17,7 +17,7 @@ function ItemPage() {
   const { id } = useParams();
   const productId = Number(id);
   const [item, setItem] = useState<Product | null>(null);
-  const [usersByItem, setUsersByItem] = useState<User[]>([]);
+  const [ordersByItem, setOrdersByItem] = useState<OrdersType[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -53,8 +53,8 @@ function ItemPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await getAllUsersByItem(productId);
-        setUsersByItem(response);
+        const response = await getAllOrdersByItem(productId);
+        setOrdersByItem(response);
       } catch (error) {}
     };
     fetchUsers();
@@ -113,7 +113,9 @@ function ItemPage() {
     <section>
       <SubstrateForUser className={s['substrate']}>
         <dl className={s['substrate__info-wrapper']}>
-          <dt className={s['substrate__avatar']}>{getFirstLetters(`${item.name}`)}</dt>
+          <dt className={s['substrate__avatar']}>
+            <img src={item.image} alt="" className={s['substrate__avatar-image']} />
+          </dt>
           <dd className={s['substrate__info-container']}>
             <dl className={s['substrate__user-details']}>
               <dt className={s['substrate__name']}>{item.name}</dt>
@@ -186,22 +188,26 @@ function ItemPage() {
           </AdminButton>
         </SubstrateForFrom>
 
-        <SubstrateForFrom title="Последние покупки/Куплено раз" count={usersByItem.length}>
+        <SubstrateForFrom title="Последние покупки/Куплено раз" count={ordersByItem.length}>
           <ul className={s['orders-list']}>
-            {usersByItem.length > 0 ? (
-              usersByItem.slice(0, 7).map((user) => (
+            {ordersByItem.length > 0 ? (
+              ordersByItem.slice(0, 7).map((order) => (
                 <li className={s['orders-list__item']}>
                   <div className={s['orders-list__info']}>
                     <span className={s['orders-list__initials']} style={{ background: generateBlueGray() }}>
-                      {getFirstLetters(`${user.first_name} ${user.patronym}`)}
+                      {getFirstLetters(`${order.userFullName}`, 2)}
                     </span>
                     <p className={s['orders-list__customer']}>
-                      {user.first_name} {user.patronym}{' '}
-                      <span className={s['orders-list__order-number']}>{user.phone_number}</span>
+                      {order.userFullName}
+                      <span className={s['orders-list__order-number']}>#{order.orderId}</span>
                     </p>
                   </div>
                   <span className={s['orders-list__status']}>
-                    <StatusBadge variant={true ? 'pending' : 'received'} />
+                    <StatusBadge
+                      variant={
+                        order.status == 'waiting' ? 'pending' : order.status == 'received' ? 'received' : 'cancelled'
+                      }
+                    />
                   </span>
                 </li>
               ))
