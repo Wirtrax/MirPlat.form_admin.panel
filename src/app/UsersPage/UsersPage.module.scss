@@ -1,14 +1,12 @@
+@use '../../styles/helpers' as *;
+@use '../Page.module.scss' as page;
+
 .table {
     &__initials {
-        display: flex;
-        align-items: center;
-        gap: rem(10);
+        @include page.table-badge-row;
 
         &-letter {
-            padding: rem(10);
-            border-radius: rem(10);
-            color: var(--color-light);
-            font-weight: 500;
+            @include page.table-badge-circle;
         }
 
         &-name {

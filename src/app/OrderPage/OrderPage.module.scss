@@ -1,3 +1,6 @@
+@use '../../styles/helpers' as *;
+@use '../Page.module.scss' as page;
+
 .substrate {
     margin-bottom: rem(24);
 
@@ -45,14 +48,8 @@
 }
 
 .order-info {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: rem(20);
+    @include page.two-col-info-grid;
     align-items: start;
-
-    @media (max-width: rem(768)) {
-        grid-template-columns: 1fr;
-    }
 }
 
 .product {
@@ -123,16 +120,14 @@
     margin-bottom: rem(16);
 
     &__avatar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: rem(40);
-        height: rem(40);
-        border-radius: rem(12);
-        color: var(--color-light);
-        font-size: rem(13);
-        font-weight: 700;
-        flex-shrink: 0;
+        @include page.avatar-circle($size: rem(40),
+            $radius: rem(12),
+            $font-size: rem(13),
+            $font-weight: 700,
+            $border: false,
+            $shadow: false,
+            $uppercase: false,
+            $select-none: false);
     }
 
     &__info {

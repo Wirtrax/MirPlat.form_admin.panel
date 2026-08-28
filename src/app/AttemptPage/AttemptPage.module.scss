@@ -1,64 +1,11 @@
-.substrate {
-    margin-block: rem(20);
+@use '../../styles/helpers' as *;
+@use '../Page.module.scss' as page;
 
-    &__info-wrapper {
-        display: flex;
-        align-items: center;
-        gap: rem(16);
-        margin: 0;
-        padding: rem(12) rem(16);
-        flex: 1;
-    }
+.substrate {
+    @include page.substrate-header;
 
     &__avatar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: rem(48);
-        height: rem(48);
-        margin: 0;
-        background: var(--color-overlay-light);
-        border: 1px solid var(--color-light);
-        border-radius: rem(8);
-        color: var(--color-light);
-        font-weight: 600;
-        font-size: rem(18);
-        text-transform: uppercase;
-        user-select: none;
-        flex-shrink: 0;
-        box-shadow: 0 4px 12px var(--color-indigo-30);
-    }
-
-    &__info-container {
-        margin: 0;
-        flex: 1;
-        min-width: 0;
-    }
-
-    &__user-details {
-        display: flex;
-        flex-direction: column;
-        gap: rem(4);
-        margin: 0;
-    }
-
-    &__full-name {
-        margin: 0;
-        font-size: rem(16);
-        font-weight: 600;
-        color: var(--color-light);
-        line-height: 1.4;
-    }
-
-    &__details {
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: rem(8);
-        font-size: rem(13);
-        color: var(--color-gray-52);
-        font-weight: 400;
-        flex-wrap: wrap;
+        @include page.avatar-circle;
     }
 }
 
@@ -125,18 +72,7 @@
     border-radius: rem(12);
 
     &__avatar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: rem(40);
-        height: rem(40);
-        border-radius: rem(8);
-        color: var(--color-light);
-        font-weight: 600;
-        font-size: rem(14);
-        text-transform: uppercase;
-        user-select: none;
-        flex-shrink: 0;
+        @include page.avatar-circle($size: rem(40), $font-size: rem(14), $border: false, $shadow: false);
     }
 
     &__details {

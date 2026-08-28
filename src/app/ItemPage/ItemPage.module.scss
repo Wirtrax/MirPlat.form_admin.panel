@@ -1,34 +1,11 @@
 @use '../../styles/helpers' as *;
+@use '../Page.module.scss' as page;
 
 .substrate {
-    margin-block: rem(20);
-
-    &__info-wrapper {
-        display: flex;
-        align-items: center;
-        gap: rem(16);
-        margin: 0;
-        padding: rem(12) rem(16);
-        flex: 1;
-    }
+    @include page.substrate-header($with-full-name: false);
 
     &__avatar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: rem(48);
-        height: rem(48);
-        margin: 0;
-        background: var(--color-overlay-light);
-        border: 1px solid var(--color-light);
-        border-radius: rem(8);
-        color: var(--color-light);
-        font-weight: 600;
-        font-size: rem(18);
-        text-transform: uppercase;
-        user-select: none;
-        flex-shrink: 0;
-        box-shadow: 0 4px 12px var(--color-indigo-30);
+        @include page.avatar-circle;
 
         &-image {
             height: 100%;
@@ -36,132 +13,34 @@
         }
     }
 
-    &__info-container {
-        margin: 0;
-        flex: 1;
-        min-width: 0;
-    }
-
-    &__user-details {
-        display: flex;
-        flex-direction: column;
-        gap: rem(4);
-        margin: 0;
-    }
-
-    &__details {
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: rem(8);
-        font-size: rem(13);
-        color: var(--color-gray-52);
-        font-weight: 400;
-        flex-wrap: wrap;
-    }
-
-    &__delete-btn,
-    &__hidden-btn {
-        padding: rem(8) rem(18);
-        border: none;
-        border-radius: rem(8);
-        font-size: rem(13);
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-transform: lowercase;
-        letter-spacing: 0.5px;
-        margin-left: rem(8);
-    }
-
     &__delete-btn {
-        background: var(--color-danger-bg);
-        color: var(--color-danger);
-
-        &:hover {
-            box-shadow: 0 6px 20px var(--color-danger-glow);
-            background: var(--color-danger-border);
-        }
-
-        &:active {
-            transform: scale(0.95);
-        }
+        @include page.delete-button;
     }
 
     &__hidden-btn {
-        background: var(--color-gray-80);
-        color: var(--color-dark-30);
-
-        &:hover {
-            background: var(--color-gray-70);
-        }
-
-        &:active {
-            transform: scale(0.95);
-        }
+        @include page.hidden-button;
     }
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    row-gap: rem(15);
+    @include page.form-flex-base;
 
     &__input-split {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: rem(10);
-
-        @include mobile {
-            grid-template-columns: 1fr;
-        }
+        @include page.form-input-split;
     }
 }
 
 .item-info {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: rem(20);
-
-    @include laptop {
-        grid-template-columns: 1fr;
-    }
+    @include page.two-col-info-grid;
 }
 
 .orders-list {
-    display: grid;
-    row-gap: rem(6);
-
-    &__item {
-        padding: rem(10);
-        border: 1px solid var(--color-gray-80);
-        border-radius: rem(10);
-
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    &__info {
-        display: flex;
-        align-items: center;
-        column-gap: rem(8);
-    }
+    @include page.orders-list-base;
 
     &__initials {
         padding: rem(8);
         color: var(--color-light);
         font-weight: 600;
         border-radius: rem(6);
-    }
-
-    &__customer {
-        font-weight: 600;
-    }
-
-    &__order-number {
-        display: block;
-        font-weight: 400;
-        color: var(--color-gray-60);
     }
 }

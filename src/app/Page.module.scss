@@ -1,3 +1,5 @@
+@use '../styles/helpers/' as *;
+
 .search {
     display: flex;
     gap: rem(20);
@@ -10,4 +12,207 @@
     flex-wrap: wrap;
     row-gap: rem(20);
     margin-block: rem(28);
+}
+
+// Круглая/скруглённая "аватарка-инициалы".
+@mixin avatar-circle($size: rem(48),
+    $radius: rem(8),
+    $font-size: rem(18),
+    $font-weight: 600,
+    $border: true,
+    $shadow: true,
+    $uppercase: true,
+    $select-none: true) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: $size;
+    height: $size;
+    margin: 0;
+    border-radius: $radius;
+    color: var(--color-light);
+    font-weight: $font-weight;
+    font-size: $font-size;
+    flex-shrink: 0;
+
+    @if $uppercase {
+        text-transform: uppercase;
+    }
+
+    @if $select-none {
+        user-select: none;
+    }
+
+    @if $border {
+        background: var(--color-overlay-light);
+        border: 1px solid var(--color-light);
+    }
+
+    @if $shadow {
+        box-shadow: 0 4px 12px var(--color-indigo-30);
+    }
+}
+
+// "Шапка-подложка" сущности (пользователь / предмет / попытка):
+@mixin substrate-header($with-full-name: true) {
+    margin-block: rem(20);
+
+    &__info-wrapper {
+        display: flex;
+        align-items: center;
+        gap: rem(16);
+        margin: 0;
+        padding: rem(12) rem(16);
+        flex: 1;
+    }
+
+    &__info-container {
+        margin: 0;
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__user-details {
+        display: flex;
+        flex-direction: column;
+        gap: rem(4);
+        margin: 0;
+    }
+
+    @if $with-full-name {
+        &__full-name {
+            margin: 0;
+            font-size: rem(16);
+            font-weight: 600;
+            color: var(--color-light);
+            line-height: 1.4;
+        }
+    }
+
+    &__details {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: rem(8);
+        font-size: rem(13);
+        color: var(--color-gray-52);
+        font-weight: 400;
+        flex-wrap: wrap;
+    }
+}
+
+// Базовый сброс для действий-кнопок (delete/hidden и т.п.)
+@mixin action-button-base {
+    padding: rem(8) rem(18);
+    border: none;
+    border-radius: rem(8);
+    font-size: rem(13);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: lowercase;
+    letter-spacing: 0.5px;
+    margin-left: rem(8);
+}
+
+@mixin delete-button {
+    @include action-button-base;
+    background: var(--color-danger-bg);
+    color: var(--color-danger);
+
+    &:hover {
+        box-shadow: 0 6px 20px var(--color-danger-glow);
+        background: var(--color-danger-border);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+@mixin hidden-button {
+    @include action-button-base;
+    background: var(--color-gray-80);
+    color: var(--color-dark-30);
+
+    &:hover {
+        background: var(--color-gray-70);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+// Список заказов: сетка + строка заказа.
+@mixin orders-list-base {
+    display: grid;
+    row-gap: rem(6);
+
+    &__item {
+        padding: rem(10);
+        border: 1px solid var(--color-gray-80);
+        border-radius: rem(10);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__info {
+        display: flex;
+        align-items: center;
+        column-gap: rem(8);
+    }
+
+    &__customer {
+        font-weight: 600;
+    }
+
+    &__order-number {
+        display: block;
+        font-weight: 400;
+        color: var(--color-gray-60);
+    }
+}
+
+// Двухколоночная форма-ряд, схлопывающаяся в одну колонку на мобильном.
+@mixin form-input-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: rem(10);
+
+    @include mobile {
+        grid-template-columns: 1fr;
+    }
+}
+
+// Базовая "вертикальная" форма (label -> поле друг под другом).
+@mixin form-flex-base {
+    display: flex;
+    flex-direction: column;
+    row-gap: rem(15);
+}
+
+// Строка "инициалы + подпись" в таблице (значок-бейдж + текст).
+@mixin table-badge-row {
+    display: flex;
+    align-items: center;
+    gap: rem(10);
+}
+
+@mixin table-badge-circle {
+    padding: rem(10);
+    border-radius: rem(10);
+    color: var(--color-light);
+    font-weight: 500;
+}
+
+@mixin two-col-info-grid($ratio: 2fr 1fr, $gap: rem(20)) {
+    display: grid;
+    grid-template-columns: $ratio;
+    gap: $gap;
+
+    @include laptop {
+        grid-template-columns: 1fr;
+    }
 }

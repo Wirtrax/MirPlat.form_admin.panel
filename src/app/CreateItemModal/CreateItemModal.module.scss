@@ -1,9 +1,8 @@
 @use '../../styles/helpers' as *;
+@use '../Page.module.scss' as page;
 
 .form {
-    display: flex;
-    flex-direction: column;
-    row-gap: rem(15);
+    @include page.form-flex-base;
     min-width: rem(420);
 
     @include mobile {
@@ -11,13 +10,7 @@
     }
 
     &__input-split {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: rem(10);
-
-        @include mobile {
-            grid-template-columns: 1fr;
-        }
+        @include page.form-input-split;
     }
 
     &__checkbox-panel {
