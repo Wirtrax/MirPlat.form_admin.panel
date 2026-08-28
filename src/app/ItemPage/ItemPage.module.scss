@@ -29,6 +29,11 @@
         user-select: none;
         flex-shrink: 0;
         box-shadow: 0 4px 12px var(--color-indigo-30);
+
+        &-image {
+            height: 100%;
+            border-radius: rem(8);
+        }
     }
 
     &__info-container {

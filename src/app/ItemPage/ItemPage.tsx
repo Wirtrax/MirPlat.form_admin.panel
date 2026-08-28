@@ -4,8 +4,8 @@ import AdminInput from '../../components/Input/AdminInput';
 import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/SubstrateForFrom';
 import SubstrateForUser from '../../components/SubstrateAdmin/SubstrateForUser/SubstrateForUser';
 import { useEffect, useState } from 'react';
-import type { Product } from '../../types/apiType';
-import { deleteItem, getItem, hideItem, updateItem } from '../../service/api';
+import type { OrdersType, Product } from '../../types/apiType';
+import { getAllOrdersByItem, getItem, hideItem, updateItem } from '../../service/api';
 import { getFirstLetters } from '../../utils/firstLetters';
 import s from './ItemPage.module.scss';
 import ChekboxAdmin from '../../components/Chekbox/ChekboxAdmin';
@@ -17,6 +17,7 @@ function ItemPage() {
   const { id } = useParams();
   const productId = Number(id);
   const [item, setItem] = useState<Product | null>(null);
+  const [ordersByItem, setOrdersByItem] = useState<OrdersType[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -26,6 +27,7 @@ function ItemPage() {
     is_active: true,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     const fetchItem = async () => {
       try {
@@ -48,20 +50,19 @@ function ItemPage() {
     fetchItem();
   }, [productId]);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await getAllOrdersByItem(productId);
+        setOrdersByItem(response);
+      } catch (error) {}
+    };
+    fetchUsers();
+  }, []);
+
   if (!item) {
     return <div>Продукт не найден</div>;
   }
-
-  const handleDeleteItem = async (id: number) => {
-    try {
-      const response = await deleteItem(id);
-      if (response.success) {
-        console.log('продукт был удален');
-      }
-    } catch (error) {
-      console.log('ошибка удаления', error);
-    }
-  };
 
   const handleHiddenItem = async (active: boolean) => {
     try {
@@ -112,7 +113,9 @@ function ItemPage() {
     <section>
       <SubstrateForUser className={s['substrate']}>
         <dl className={s['substrate__info-wrapper']}>
-          <dt className={s['substrate__avatar']}>{getFirstLetters(`${item.name}`)}</dt>
+          <dt className={s['substrate__avatar']}>
+            <img src={item.image} alt="" className={s['substrate__avatar-image']} />
+          </dt>
           <dd className={s['substrate__info-container']}>
             <dl className={s['substrate__user-details']}>
               <dt className={s['substrate__name']}>{item.name}</dt>
@@ -124,9 +127,6 @@ function ItemPage() {
         </dl>
         <AdminButton className={s['substrate__hidden-btn']} onClick={() => handleHiddenItem(!item.is_active)}>
           {item.is_active ? 'скрыть' : 'вернуть в продажу'}
-        </AdminButton>
-        <AdminButton className={s['substrate__delete-btn']} onClick={() => handleDeleteItem(item.id)}>
-          удалить
         </AdminButton>
       </SubstrateForUser>
       <div className={s['item-info']}>
@@ -188,21 +188,32 @@ function ItemPage() {
           </AdminButton>
         </SubstrateForFrom>
 
-        <SubstrateForFrom title="Куплено раз" count={7}>
+        <SubstrateForFrom title="Последние покупки/Куплено раз" count={ordersByItem.length}>
           <ul className={s['orders-list']}>
-            <li className={s['orders-list__item']}>
-              <div className={s['orders-list__info']}>
-                <span className={s['orders-list__initials']} style={{ background: generateBlueGray() }}>
-                  {getFirstLetters('покупатель первый')}
-                </span>
-                <p className={s['orders-list__customer']}>
-                  Покупатель <span className={s['orders-list__order-number']}>#номер заказа</span>
-                </p>
-              </div>
-              <span className={s['orders-list__status']}>
-                <StatusBadge variant={true ? 'pending' : 'received'} />
-              </span>
-            </li>
+            {ordersByItem.length > 0 ? (
+              ordersByItem.slice(0, 7).map((order) => (
+                <li className={s['orders-list__item']}>
+                  <div className={s['orders-list__info']}>
+                    <span className={s['orders-list__initials']} style={{ background: generateBlueGray() }}>
+                      {getFirstLetters(`${order.userFullName}`, 2)}
+                    </span>
+                    <p className={s['orders-list__customer']}>
+                      {order.userFullName}
+                      <span className={s['orders-list__order-number']}>#{order.orderId}</span>
+                    </p>
+                  </div>
+                  <span className={s['orders-list__status']}>
+                    <StatusBadge
+                      variant={
+                        order.status == 'waiting' ? 'pending' : order.status == 'received' ? 'received' : 'cancelled'
+                      }
+                    />
+                  </span>
+                </li>
+              ))
+            ) : (
+              <p> товар еще не покупали </p>
+            )}
           </ul>
         </SubstrateForFrom>
       </div>

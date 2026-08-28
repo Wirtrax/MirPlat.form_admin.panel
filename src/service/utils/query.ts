@@ -26,7 +26,7 @@ api.interceptors.response.use(
 export const request = async <T>(
   endpoint: string,
   options: AxiosRequestConfig = {},
-  typeRoute: 'admin' | 'excel' | 'api' = 'api'
+  typeRoute: 'admin' | 'admin_panel' | 'api' = 'api'
 ): Promise<T> => {
   const res = await api.request<T>({
     url: `${typeRoute}${endpoint}`,

@@ -50,23 +50,6 @@ export const getItem = (id: number) => {
   });
 };
 
-export const deleteItem = (
-  id: number
-): Promise<{
-  success: boolean;
-}> => {
-  return request(
-    `/items/${id}`,
-    {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-    },
-    'admin'
-  );
-};
-
 export const updateItem = (
   id: number,
   data: Partial<Product>
@@ -150,22 +133,18 @@ export const getUser = (id: number) => {
   );
 };
 
-// export const deleteUser = (
-//   id: number
-// ): Promise<{
-//   success: boolean;
-// }> => {
-//   return request(
-//     `/users/${id}`,
-//     {
-//       method: 'DELETE',
-//       headers: {
-//         Authorization: `Bearer ${getAuthToken()}`,
-//       },
-//     },
-//     'admin'
-//   );
-// };
+export const getAllUsersByItem = (id: number) => {
+  return request<User[]>(
+    `/users/by-item/${id}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    },
+    'admin'
+  );
+};
 
 export const updateUser = (
   id: number,
@@ -202,6 +181,19 @@ export const getOrders = () => {
 export const getOrder = (id: number) => {
   return request<OrdersType>(
     `/orders/${id}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    },
+    'admin'
+  );
+};
+
+export const getAllOrdersByItem = (id: number) => {
+  return request<OrdersType[]>(
+    `/orders/by-item/${id}`,
     {
       method: 'GET',
       headers: {
