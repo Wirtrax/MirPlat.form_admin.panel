@@ -30,6 +30,14 @@ export interface OneOrderType extends OrdersType {
   image: string;
 }
 
+export interface OrderResponseByUserId {
+  orderId: number;
+  userId: number;
+  itemName: string;
+  itemImage: string;
+  itemPrice: number;
+}
+
 export interface CreateUser {
   first_name: string;
   last_name: string;

@@ -47,7 +47,7 @@ function UsersPage() {
     if (!searchValue) return users;
 
     return users.filter((user) => {
-      const fields = [user.patronym, user.phone_number, user.email];
+      const fields = [user.last_name, user.first_name, user.patronym, user.phone_number, user.email];
       return fields.some((field) => field?.toLocaleLowerCase().includes(searchValue));
     });
   }, [users, debouncedSearchValue]);
