@@ -6,6 +6,7 @@ import type {
   OrdersType,
   AttemptStatus,
   PurchaseStatus,
+  OrderResponseByUserId,
 } from '../types/apiType';
 import { request } from './utils/query';
 import { getAuthToken, setAuthToken } from './utils/authToken';
@@ -165,6 +166,25 @@ export const updateUser = (
   );
 };
 
+export const updateUserRole = (
+  id: number,
+  data: { isAdmin: boolean }
+): Promise<{
+  success: boolean;
+}> => {
+  return request(
+    `/users/${id}/role`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+      data,
+    },
+    'admin'
+  );
+};
+
 // заказы - order
 export const getOrders = () => {
   return request<OrdersType[]>(
@@ -194,6 +214,19 @@ export const getOrder = (id: number) => {
 export const getAllOrdersByItem = (id: number) => {
   return request<OrdersType[]>(
     `/orders/by-item/${id}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    },
+    'admin'
+  );
+};
+
+export const getAllOrdersByUser = (id: number) => {
+  return request<OrderResponseByUserId[]>(
+    `/orders/by-user/${id}`,
     {
       method: 'GET',
       headers: {
@@ -239,6 +272,19 @@ export const getAttempts = () => {
 export const getAttempt = (id: number) => {
   return request<AttemptsTypeFullInformation>(
     `/attempts/${id}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    },
+    'admin'
+  );
+};
+
+export const getAllAttemptsByUser = (id: number) => {
+  return request<AttemptsTypeFullInformation[]>(
+    `/attempts/by-user/${id}`,
     {
       method: 'GET',
       headers: {
