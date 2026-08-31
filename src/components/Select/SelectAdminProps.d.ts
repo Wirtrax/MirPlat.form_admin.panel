@@ -16,4 +16,5 @@ export interface SelectProps {
       value: string;
     };
   }) => void;
+  onBlur?: () => void;
 }

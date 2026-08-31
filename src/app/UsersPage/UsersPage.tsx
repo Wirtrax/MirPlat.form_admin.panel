@@ -128,7 +128,7 @@ function UsersPage() {
         countElements={`${users.length} записей`}
         columns={columns}
         data={filteredUsers}
-        link={(user) => `/admin/user/${user.id}`}
+        link={(user) => `/admin_panel/user/${user.id}`}
       />
     </section>
   );

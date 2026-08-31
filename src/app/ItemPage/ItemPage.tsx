@@ -1,4 +1,7 @@
 import { useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import AdminButton from '../../components/AdminButton/AdminButton';
 import AdminInput from '../../components/Input/AdminInput';
 import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/SubstrateForFrom';
@@ -8,32 +11,62 @@ import type { OrdersType, Product } from '../../types/apiType';
 import { getAllOrdersByItem, getItem, hideItem, updateItem } from '../../service/api';
 import { getFirstLetters } from '../../utils/firstLetters';
 import s from './ItemPage.module.scss';
-import ChekboxAdmin from '../../components/Chekbox/ChekboxAdmin';
+import ChekboxAdmin from '../../components/Chekbox/CheckboxAdmin';
 import AdminTextarea from '../../components/AdminTextarea/AdminTextarea';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
 import { generateBlueGray } from '../../utils/generateBlueGray';
+import { toast } from 'sonner';
+
+const schema = yup.object({
+  name: yup.string().trim().required('Укажите название товара'),
+  description: yup.string().trim().required('Укажите описание товара'),
+  image: yup.string().trim().url('Введите корректную ссылку на изображение').required('Укажите изображение'),
+  price: yup.number().typeError('Введите число').positive('Цена должна быть больше нуля').required('Укажите цену'),
+  quantity: yup
+    .number()
+    .typeError('Введите число')
+    .integer('Целое число')
+    .min(0, 'Не может быть отрицательным')
+    .required('Укажите остаток на складе'),
+  is_active: yup.boolean().required(),
+});
+
+type FormValues = yup.InferType<typeof schema>;
+
+const emptyValues: FormValues = {
+  name: '',
+  description: '',
+  image: '',
+  quantity: 0,
+  price: 0,
+  is_active: true,
+};
 
 function ItemPage() {
   const { id } = useParams();
   const productId = Number(id);
   const [item, setItem] = useState<Product | null>(null);
   const [ordersByItem, setOrdersByItem] = useState<OrdersType[]>([]);
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    image: '',
-    quantity: 0,
-    price: 0,
-    is_active: true,
+
+  const {
+    register,
+    watch,
+    reset,
+    setValue,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({
+    resolver: yupResolver(schema),
+    defaultValues: emptyValues,
+    mode: 'onTouched',
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchItem = async () => {
       try {
         const data = await getItem(productId);
         setItem(data);
-        setFormData({
+        reset({
           name: data.name,
           description: data.description,
           image: data.image,
@@ -42,7 +75,7 @@ function ItemPage() {
           is_active: data.is_active,
         });
       } catch (error) {
-        console.log('продукт не найден');
+        toast.error('продукт не найден');
         setItem(null);
       }
     };
@@ -58,7 +91,7 @@ function ItemPage() {
       } catch (error) {}
     };
     fetchUsers();
-  }, []);
+  }, [productId]);
 
   if (!item) {
     return <div>Продукт не найден</div>;
@@ -69,43 +102,26 @@ function ItemPage() {
       const response = await hideItem(item.id, { is_active: active });
       if (response.success) {
         setItem((prev) => (prev ? { ...prev, is_active: active } : prev));
-        setFormData((prev) => ({ ...prev, is_active: active }));
+        setValue('is_active', active, { shouldDirty: false });
+        toast.success('видимость товара была изменена');
       }
     } catch (error) {
-      console.log('ошибка обновления', error);
+      toast.error('ошибка при обновлении товара');
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    const type = 'type' in e.target ? e.target.type : undefined;
-    const checked = 'checked' in e.target ? e.target.checked : undefined;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  const onSubmit = async (values: FormValues) => {
     try {
-      const updatedItemData: Product = {
-        ...item,
-        ...formData,
-        price: Number(formData.price),
-        quantity: Number(formData.quantity),
-      };
+      const updatedItemData: Product = { ...item, ...values };
 
       const response = await updateItem(item.id, updatedItemData);
-      console.log('данные обновлены успешно', response);
-      setItem(updatedItemData);
+      if (response.success) {
+        toast.success('данные обновлены успешно');
+        setItem(updatedItemData);
+        reset(values);
+      }
     } catch (error) {
-      console.log('ошибка обновления', error);
-    } finally {
-      setIsSubmitting(false);
+      toast.error('ошибка обновления');
     }
   };
 
@@ -131,59 +147,52 @@ function ItemPage() {
       </SubstrateForUser>
       <div className={s['item-info']}>
         <SubstrateForFrom title="Параметры товара">
-          <form className={s['form']}>
-            <AdminInput
-              label="Название"
-              value={formData.name}
-              onChange={handleChange}
-              name="name"
-              type="text"
-              placeholder="Название"
-            />
-            <AdminTextarea
-              label="Описание"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Описание товара"
-            />
-            <div className={s['form__input-split']}>
-              <AdminInput
-                label="Цена"
-                value={formData.price}
-                onChange={handleChange}
-                name="price"
-                type="text"
-                placeholder="Цена"
-              />
-              <AdminInput
-                label="Остаток на складе"
-                value={formData.quantity}
-                onChange={handleChange}
-                name="quantity"
-                type="text"
-                placeholder="Остаток на складе"
-              />
+          <form className={s['form']} onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <AdminInput label="Название" type="text" placeholder="Название" {...register('name')} />
+              {errors.name && <p className={s['form__error']}>{errors.name.message}</p>}
             </div>
-            <AdminInput
-              label="Изображение"
-              value={formData.image}
-              onChange={handleChange}
-              name="image"
-              type="text"
-              placeholder="https://..."
-            />
+
+            <div>
+              <AdminTextarea label="Описание" placeholder="Описание товара" {...register('description')} />
+              {errors.description && <p className={s['form__error']}>{errors.description.message}</p>}
+            </div>
+
+            <div className={s['form__input-split']}>
+              <div>
+                <AdminInput label="Цена" type="text" placeholder="Цена" {...register('price')} />
+                {errors.price && <p className={s['form__error']}>{errors.price.message}</p>}
+              </div>
+              <div>
+                <AdminInput
+                  label="Остаток на складе"
+                  type="text"
+                  placeholder="Остаток на складе"
+                  {...register('quantity')}
+                />
+                {errors.quantity && <p className={s['form__error']}>{errors.quantity.message}</p>}
+              </div>
+            </div>
+
+            <div>
+              <AdminInput label="Изображение" type="text" placeholder="https://..." {...register('image')} />
+              {errors.image && <p className={s['form__error']}>{errors.image.message}</p>}
+            </div>
+
             <div className={s['form__checkbox-panel']}>
               <ChekboxAdmin
                 label="Товар активен"
                 subtitle="Показывать в каталоге для участников"
-                name="is_active"
-                isCheck={formData.is_active}
-                onChange={handleChange}
+                isCheck={watch('is_active')}
+                {...register('is_active')}
               />
             </div>
           </form>
-          <AdminButton type="submit" disabled={isSubmitting} className={s['form__button']} onClick={handleSubmit}>
+          <AdminButton
+            type="submit"
+            disabled={isSubmitting}
+            className={s['form__button']}
+            onClick={handleSubmit(onSubmit)}>
             {isSubmitting ? 'Сохранение...' : 'Сохранить изменения'}
           </AdminButton>
         </SubstrateForFrom>
@@ -192,7 +201,7 @@ function ItemPage() {
           <ul className={s['orders-list']}>
             {ordersByItem.length > 0 ? (
               ordersByItem.slice(0, 7).map((order) => (
-                <li className={s['orders-list__item']}>
+                <li className={s['orders-list__item']} key={order.orderId}>
                   <div className={s['orders-list__info']}>
                     <span className={s['orders-list__initials']} style={{ background: generateBlueGray() }}>
                       {getFirstLetters(`${order.userFullName}`, 2)}

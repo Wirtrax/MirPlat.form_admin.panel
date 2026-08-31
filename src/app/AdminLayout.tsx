@@ -41,10 +41,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = () => {
         title="Leska"
         subtitle="ADMIN PANEL"
         navItems={[
-          { label: 'Пользователи', path: '/admin/users', count: 0, icon: <UsersIcon /> },
-          { label: 'Товары', path: '/admin/items', count: 0, icon: <ProductIcon /> },
-          { label: 'Все заказы', path: '/admin/orders', count: 0, icon: <AllOrderIcon /> },
-          { label: 'Участники игр', path: '/admin/attempts', count: 0, icon: <GameIcon /> },
+          { label: 'Пользователи', path: '/admin_panel/users', count: 0, icon: <UsersIcon /> },
+          { label: 'Товары', path: '/admin_panel/items', count: 0, icon: <ProductIcon /> },
+          { label: 'Все заказы', path: '/admin_panel/orders', count: 0, icon: <AllOrderIcon /> },
+          { label: 'Участники игр', path: '/admin_panel/attempts', count: 0, icon: <GameIcon /> },
         ]}
         adminName="Админ Дежурный"
         adminRole="Суперадмин"

@@ -1,0 +1,27 @@
+.error {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--background-gradient);
+
+    &__title {
+        margin: 0;
+        font-size: rem(64);
+        font-weight: 700;
+    }
+
+    &__text {
+        margin: 0 0 rem(32);
+        font-size: rem(20);
+    }
+
+    &__image {
+        margin-right: rem(50);
+        margin-top: rem(40);
+        width: rem(200);
+        height: rem(200);
+    }
+}

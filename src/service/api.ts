@@ -7,6 +7,7 @@ import type {
   AttemptStatus,
   PurchaseStatus,
   OrderResponseByUserId,
+  OneOrderType,
 } from '../types/apiType';
 import { request } from './utils/query';
 import { getAuthToken, setAuthToken } from './utils/authToken';
@@ -24,7 +25,6 @@ export const adminLogin = async (login: string, password: string) => {
     'admin'
   );
   setAuthToken(data.token);
-  console.log(data);
   return data;
 };
 
@@ -70,11 +70,7 @@ export const updateItem = (
   );
 };
 
-export const craeteItem = (
-  data: Omit<Product, 'id'>
-): Promise<{
-  id: number;
-}> => {
+export const craeteItem = (formData: FormData): Promise<Product> => {
   return request(
     `/items`,
     {
@@ -82,7 +78,7 @@ export const craeteItem = (
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
       },
-      data,
+      data: formData,
     },
     'admin'
   );
@@ -199,7 +195,7 @@ export const getOrders = () => {
   );
 };
 export const getOrder = (id: number) => {
-  return request<OrdersType>(
+  return request<OneOrderType>(
     `/orders/${id}`,
     {
       method: 'GET',

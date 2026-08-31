@@ -2,6 +2,8 @@
     display: grid;
     grid-template-columns: 1fr 4fr;
     gap: rem(20);
+    height: 100vh;
+    overflow: hidden;
 }
 
 .stat-card {
@@ -23,6 +25,8 @@
 
 .main {
     padding: rem(20) rem(10) rem(20) 0;
+    overflow-y: auto;
+    height: 100vh;
 }
 
 html {

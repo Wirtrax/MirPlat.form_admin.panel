@@ -28,6 +28,15 @@
     &__input-split {
         @include page.form-input-split;
     }
+
+    &__button {
+        padding-block: rem(10);
+    }
+
+    &__error {
+        @include page.field-error;
+    }
+
 }
 
 .item-info {
