@@ -11,6 +11,8 @@ import { getFirstLetters } from '../../utils/firstLetters';
 import { generateBlueGray } from '../../utils/generateBlueGray';
 import { attemptStatusOptions } from '../../constants/attemptStatusOptions';
 import s from './AttemptPage.module.scss';
+import { toast } from 'sonner';
+import Coin from '../../assets/ico/interface/currency.svg?react';
 
 function AttemptPage() {
   const { id } = useParams();
@@ -19,16 +21,16 @@ function AttemptPage() {
   const [attempt, setAttempt] = useState<AttemptsTypeFullInformation | null>(null);
   const [status, setStatus] = useState<AttemptStatus>('waiting');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const accepted = attempt?.attemptStatus === 'accepted' || attempt?.attemptStatus === 'declined';
 
   useEffect(() => {
     const fetchAttempt = async () => {
       try {
         const data = await getAttempt(attemptId);
-        console.log(data);
         setAttempt(data);
         setStatus(data.attemptStatus);
       } catch (error) {
-        console.log('попытка не найдена');
+        toast.error('не удалось загрузить попытку');
         setAttempt(null);
       }
     };
@@ -49,7 +51,7 @@ function AttemptPage() {
     try {
       const response = await updateAttepmt(attempt.attemptId, { status: status });
       if (response.success) {
-        console.log('ура ура ура');
+        toast.success('статус попытки успешно обновлен');
         setAttempt((prev) => {
           if (prev === null) return prev;
           return { ...prev, attemptStatus: status };
@@ -105,7 +107,9 @@ function AttemptPage() {
             />
 
             <span className={s['attempt-info__label']}>Награда</span>
-            <p className={s['attempt-info__value']}>+{attempt.reward} ★</p>
+            <p className={s['attempt-info__value']}>
+              +{attempt.reward} <Coin />
+            </p>
 
             <SelectAdmin
               label="Изменить статус"
@@ -113,6 +117,7 @@ function AttemptPage() {
               value={status}
               onChange={handleStatusChange}
               options={attemptStatusOptions}
+              disabled={accepted}
             />
 
             <AdminButton onClick={handleSave} disabled={isSubmitting}>

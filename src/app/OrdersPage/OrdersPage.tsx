@@ -115,7 +115,7 @@ function OrdersPage() {
         countElements={`${orders.length} позиций`}
         columns={columns}
         data={filteredOrders}
-        link={(order) => `/admin/orders/${order.orderId}`}
+        link={(order) => `/admin_panel/orders/${order.orderId}`}
       />
     </section>
   );

@@ -7,7 +7,7 @@ export default function ProtectedAdminRoute() {
   const isAdmin = superAdmin === true;
 
   if (!isAdmin) {
-    return <Navigate to="/admin/registration" replace />;
+    return <Navigate to="/admin_panel/registration" replace />;
   }
 
   return <Outlet />;

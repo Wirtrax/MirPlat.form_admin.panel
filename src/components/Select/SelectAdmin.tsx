@@ -2,8 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import s from './SelectAdmin.module.scss';
 import clsx from 'clsx';
 import type { Option, SelectProps } from './SelectAdminProps';
+import Arrow from '../../assets/ico/interface/arrowdown.svg?react';
 
-export const SelectAdmin: React.FC<SelectProps> = ({ label, error, name, value, options, onChange, disabled }) => {
+export const SelectAdmin: React.FC<SelectProps> = ({
+  label,
+  error,
+  name,
+  value,
+  options,
+  onChange,
+  disabled,
+  onBlur,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +51,7 @@ export const SelectAdmin: React.FC<SelectProps> = ({ label, error, name, value, 
         value: option.value,
       },
     });
+    onBlur?.();
     setIsOpen(false);
   };
 
@@ -64,22 +75,7 @@ export const SelectAdmin: React.FC<SelectProps> = ({ label, error, name, value, 
           {selected?.label}
         </button>
 
-        <svg
-          className={[s.select__icon, isOpen ? s['select__icon--open'] : ''].join(' ')}
-          width="16"
-          height="16"
-          viewBox="0 0 12 8"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true">
-          <path
-            d="M1 1.5L6 6.5L11 1.5"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <Arrow className={[s.select__icon, isOpen ? s['select__icon--open'] : ''].join(' ')} />
 
         {isOpen && (
           <ul className={s.select__menu} role="listbox">

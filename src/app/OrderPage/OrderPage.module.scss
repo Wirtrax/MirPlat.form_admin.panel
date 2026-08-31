@@ -2,7 +2,7 @@
 @use '../Page.module.scss' as page;
 
 .substrate {
-    margin-bottom: rem(24);
+    margin-block: rem(24);
 
     &__info-wrapper {
         display: flex;
@@ -117,7 +117,6 @@
     padding: rem(12);
     border-radius: rem(16);
     background: var(--color-gray-95);
-    margin-bottom: rem(16);
 
     &__avatar {
         @include page.avatar-circle($size: rem(40),
@@ -145,20 +144,5 @@
         margin: rem(2) 0 0;
         font-size: rem(13);
         color: var(--color-gray-45);
-    }
-
-    &__link {
-        border: none;
-        background: none;
-        padding: 0;
-        font-size: rem(14);
-        font-weight: 600;
-        color: var(--color-dark-10);
-        text-align: left;
-        cursor: pointer;
-
-        &:hover {
-            text-decoration: underline;
-        }
     }
 }

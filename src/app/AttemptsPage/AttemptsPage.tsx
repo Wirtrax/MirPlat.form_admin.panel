@@ -7,7 +7,6 @@ import { getAttempts } from '../../service/api';
 import type { TableColumn } from '../../components/Table/tableProps';
 import s from './AttemptsPage.module.scss';
 import pageStyle from '../Page.module.scss';
-import { useNavigate } from 'react-router-dom';
 import debounce from '../../utils/debounse';
 import type { AttemptsType } from '../../types/apiType';
 import { getFirstLetters } from '../../utils/firstLetters';
@@ -19,14 +18,12 @@ function AttemptsPage() {
   const [searchValue, setSearchValue] = useState<string>('');
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchattempts = async () => {
       setLoading(true);
       try {
         const data = await getAttempts();
-        console.log(data);
         setAttempts(data);
       } catch (error) {
       } finally {
@@ -112,7 +109,7 @@ function AttemptsPage() {
         countElements={`${attempts.length} позиций`}
         columns={columns}
         data={filteredAttempts}
-        link={(attempts) => `/admin/attempts/${attempts.attemptId}`}
+        link={(attempts) => `/admin_panel/attempts/${attempts.attemptId}`}
       />
     </section>
   );

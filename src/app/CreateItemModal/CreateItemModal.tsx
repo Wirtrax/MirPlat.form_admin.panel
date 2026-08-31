@@ -1,127 +1,191 @@
-import { useState } from 'react';
-import type { ChangeEvent, FormEvent } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import Modal from '../../components/Modal/Modal';
 import AdminButton from '../../components/AdminButton/AdminButton';
 import AdminInput from '../../components/Input/AdminInput';
 import AdminTextarea from '../../components/AdminTextarea/AdminTextarea';
-import ChekboxAdmin from '../../components/Chekbox/ChekboxAdmin';
+import ChekboxAdmin from '../../components/Chekbox/CheckboxAdmin';
 import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/SubstrateForFrom';
 import { craeteItem } from '../../service/api';
-import type { Product } from '../../types/apiType';
 import s from './CreateItemModal.module.scss';
 import type { CreateItemModalProps } from './CreateItemModalProps';
+import { toast } from 'sonner';
 
-const initialFormData = {
+const schema = yup.object({
+  name: yup.string().trim().required('Укажите название товара'),
+  description: yup.string().trim().required('Укажите описание товара'),
+  image: yup.mixed<File>().required('Выберите изображение'),
+  price: yup.number().positive('Цена должна быть больше нуля').required('Укажите цену'),
+  quantity: yup
+    .number()
+    .typeError('Введите число')
+    .integer('Целое число')
+    .min(0, 'Не может быть отрицательным')
+    .required('Укажите остаток на складе'),
+  is_active: yup.boolean().required(),
+});
+
+type FormValues = yup.InferType<typeof schema>;
+
+const defaultValues = {
   name: '',
   description: '',
-  image: '',
+  image: undefined,
   quantity: 0,
   price: 0,
   is_active: true,
 };
 
 function CreateItemModal({ onClose, onCreated }: CreateItemModalProps) {
-  const [formData, setFormData] = useState(initialFormData);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    control,
+    clearErrors,
+    register,
+    watch,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({
+    resolver: yupResolver(schema),
+    defaultValues,
+    mode: 'onTouched',
+  });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    const type = 'type' in e.target ? e.target.type : undefined;
-    const checked = 'checked' in e.target ? e.target.checked : undefined;
+  // const watchedImage = watch('image');
+  // const [imagePreview, setImagePreview] = useState<string>('');
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
+  // useEffect(() => {
+  //   if (watchedImage instanceof File) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setImagePreview(reader.result as string);
+  //     };
+  //     reader.readAsDataURL(watchedImage);
+  //   } else {
+  //     setImagePreview('');
+  //   }
+  // }, [watchedImage]);
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!formData.name.trim()) {
-      setError('Укажите название товара');
-      return;
-    }
-
-    setIsSubmitting(true);
-    setError(null);
-
+  const onSubmit = async (values: FormValues) => {
     try {
-      const newItemData: Omit<Product, 'id'> = {
-        ...formData,
-        price: Number(formData.price),
-        quantity: Number(formData.quantity),
-      };
+      const formData = new FormData();
+      formData.append('name', values.name);
+      formData.append('description', values.description);
+      formData.append('price', String(values.price));
+      formData.append('quantity', String(values.quantity));
+      formData.append('is_active', String(values.is_active));
+      if (values.image) {
+        formData.append('image', values.image);
+      }
+      console.log(typeof values.image);
 
-      const response = await craeteItem(newItemData);
+      const response = await craeteItem(formData);
 
-      onCreated({ ...newItemData, id: response.id });
+      onCreated({
+        ...values,
+        image: response.image,
+        id: response.id,
+      });
       onClose();
+      toast.success('Товар был успешно создан');
     } catch (err) {
-      console.log('ошибка создания товара', err);
-      setError('не удалось создтаь товар');
-    } finally {
-      setIsSubmitting(false);
+      setError('root.serverError', {
+        type: 'server',
+        message: 'Не удалось создать товар',
+      });
     }
   };
 
   return (
     <Modal onClose={onClose}>
       <SubstrateForFrom title="Новый товар">
-        <form className={s['form']} onSubmit={handleSubmit}>
-          <AdminInput
-            label="Название"
-            value={formData.name}
-            onChange={handleChange}
-            name="name"
-            type="text"
-            placeholder="Название"
-          />
-          <AdminTextarea
-            label="Описание"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Описание товара"
-          />
+        <form className={s['form']} onSubmit={handleSubmit(onSubmit)}>
+          <AdminInput label="Название" type="text" placeholder="Название" {...register('name')} />
+          {errors.name && <p className={s['form__error']}>{errors.name.message}</p>}
+
+          <AdminTextarea label="Описание" {...register('description')} placeholder="Описание товара" />
+          {errors.description && <p className={s['form__error']}>{errors.description.message}</p>}
+
           <div className={s['form__input-split']}>
-            <AdminInput
-              label="Цена"
-              value={formData.price}
-              onChange={handleChange}
-              name="price"
-              type="text"
-              placeholder="Цена"
-            />
-            <AdminInput
-              label="Остаток на складе"
-              value={formData.quantity}
-              onChange={handleChange}
-              name="quantity"
-              type="text"
-              placeholder="Остаток на складе"
-            />
+            <div>
+              <AdminInput label="Цена" {...register('price')} type="number" placeholder="Цена" />
+              {errors.price && <p className={s['form__error']}>{errors.price.message}</p>}
+            </div>
+
+            <div>
+              <AdminInput
+                label="Остаток на складе"
+                {...register('quantity')}
+                type="number"
+                placeholder="Остаток на складе"
+              />
+              {errors.quantity && <p className={s['form__error']}>{errors.quantity.message}</p>}
+            </div>
           </div>
-          <AdminInput
-            label="Изображение"
-            value={formData.image}
-            onChange={handleChange}
+
+          <Controller
             name="image"
-            type="text"
-            placeholder="https://..."
+            control={control}
+            render={({ field }) => (
+              <>
+                <AdminInput
+                  label="Изображение"
+                  type="file"
+                  accept="image/jpeg,image/png"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      if (file.size > 5 * 1024 * 1024) {
+                        setError('image', { type: 'manual', message: 'Файл слишком большой (макс. 5MB)' });
+                        return;
+                      }
+
+                      if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                        setError('image', {
+                          type: 'manual',
+                          message: 'Поддерживаются только JPEG, PNG и WebP',
+                        });
+                        return;
+                      }
+                      clearErrors('image');
+                      field.onChange(file);
+                    }
+                  }}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  ref={field.ref}
+                />
+
+                {errors.image && <p className={s['form__error']}>{errors.image.message}</p>}
+              </>
+            )}
           />
+
+          {/* {imagePreview && (
+            <div className={s['image-preview']}>
+              <img src={imagePreview} alt="Предпросмотр" />
+              <button
+                type="button"
+                onClick={() => {
+                  setImagePreview('');
+                }}>
+                скрыть
+              </button>
+            </div>
+          )} */}
+
           <div className={s['form__checkbox-panel']}>
             <ChekboxAdmin
               label="Товар активен"
               subtitle="Показывать в каталоге для участников"
-              name="is_active"
-              isCheck={formData.is_active}
-              onChange={handleChange}
+              isCheck={watch('is_active')}
+              {...register('is_active')}
             />
           </div>
 
-          {error && <p className={s['form__error']}>{error}</p>}
+          {errors.root?.serverError && <p className={s['form__error']}>{errors.root.serverError.message}</p>}
 
           <AdminButton type="submit" disabled={isSubmitting} className={s['form__button']}>
             {isSubmitting ? 'Создание...' : 'Создать товар'}

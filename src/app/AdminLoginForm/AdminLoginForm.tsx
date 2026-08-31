@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import s from './AdminLoginForm.module.scss';
 import Input from '../../components/Input/AdminInput';
 import AdminButton from '../../components/AdminButton/AdminButton';
@@ -7,35 +10,38 @@ import type { AdminLoginFormProps } from './adminLoginFormProps';
 import { setSuperAdmin, unsetSuperAdmin } from '../../service/features/superAdmin/superAdminSlice';
 import { useAppDispatch } from '../../hooks/redux';
 import { useNavigate } from 'react-router-dom';
+import Shild from '../../assets/ico/interface/shild.svg?react';
 
-const AdminLoginForm: React.FC<AdminLoginFormProps> = ({ className = '', onSuccess }) => {
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const schema = yup.object({
+  login: yup.string().trim().required('введите логин'),
+  password: yup.string().trim().required('введите пароль'),
+});
+
+type FormValues = yup.InferType<typeof schema>;
+
+const AdminLoginForm: React.FC<AdminLoginFormProps> = ({ className = '' }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({
+    resolver: yupResolver(schema),
+    defaultValues: { login: '', password: '' },
+    mode: 'onTouched',
+  });
 
-    if (!login.trim() || !password.trim()) {
-      setError('Заполните логин и пароль');
-      return;
-    }
-
-    setError(null);
-    setIsLoading(true);
-
+  const onSubmit = async (value: FormValues) => {
     try {
-      await adminLogin(login, password);
+      await adminLogin(value.login, value.password);
       dispatch(setSuperAdmin(true));
-      navigate('/admin/users');
+      navigate('/admin_panel/users', { replace: true });
     } catch (err) {
-      setError('Неверный логин или пароль');
+      setError('root.serverError', { type: 'auth', message: 'неверный логшин или пароль' });
       dispatch(unsetSuperAdmin());
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -44,19 +50,7 @@ const AdminLoginForm: React.FC<AdminLoginFormProps> = ({ className = '', onSucce
       <div className={s['admin-login__card']}>
         <div className={s['admin-login__illustration']}>
           <div className={s['admin-login__illustration-circle']}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={s['admin-login__illustration-icon']}
-              aria-hidden="true">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
-              <path d="m9 12 2 2 4-4" />
-            </svg>
+            <Shild className={s['admin-login__illustration-icon']} />
           </div>
 
           <span className={`${s['admin-login__shape']} ${s['admin-login__shape--circle']}`} />
@@ -64,7 +58,7 @@ const AdminLoginForm: React.FC<AdminLoginFormProps> = ({ className = '', onSucce
           <span className={`${s['admin-login__shape']} ${s['admin-login__shape--square']}`} />
         </div>
 
-        <form className={s['admin-login__form']} onSubmit={handleSubmit}>
+        <form className={s['admin-login__form']} onSubmit={handleSubmit(onSubmit)}>
           <h1 className={s['admin-login__title']}>Вход в панель</h1>
           <p className={s['admin-login__subtitle']}>Доступ только для администраторов</p>
 
@@ -74,26 +68,26 @@ const AdminLoginForm: React.FC<AdminLoginFormProps> = ({ className = '', onSucce
               placeholder="Введите логин"
               type="text"
               autoComplete="username"
-              value={login}
-              onChange={(e) => setLogin(e.target.value)}
-              disabled={isLoading}
+              disabled={isSubmitting}
+              {...register('login')}
             />
+            {errors.login && <p className={s['admin-login__error']}>{errors.login.message}</p>}
 
             <Input
               label="Пароль"
               placeholder="Введите пароль"
               type="password"
               autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
+              disabled={isSubmitting}
+              {...register('password')}
             />
+            {errors.password && <p className={s['admin-login__error']}>{errors.password.message}</p>}
           </div>
 
-          {error && <p className={s['admin-login__error']}>{error}</p>}
+          {errors.root?.serverError && <p className={s['admin-login__error']}>{errors.root.serverError.message}</p>}
 
-          <AdminButton type="submit" disabled={isLoading} className={s['admin-login__submit']}>
-            {isLoading ? 'Вход...' : 'Войти'}
+          <AdminButton type="submit" disabled={isSubmitting} className={s['admin-login__submit']}>
+            {isSubmitting ? 'Вход...' : 'Войти'}
           </AdminButton>
         </form>
       </div>

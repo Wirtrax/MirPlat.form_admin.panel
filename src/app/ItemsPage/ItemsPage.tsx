@@ -103,7 +103,7 @@ function ItemsPage() {
         countElements={`${items.length} позиций`}
         columns={columns}
         data={filteredItems}
-        link={(items) => `/admin/items/${items.id}`}
+        link={(items) => `/admin_panel/items/${items.id}`}
       />
 
       {isCreateModalOpen && (

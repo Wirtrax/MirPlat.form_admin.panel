@@ -8,7 +8,7 @@ export default function PublicAdminRoute() {
   const isAdmin = superAdmin === true;
 
   if (isAdmin) {
-    return <Navigate to="/admin/users" replace />;
+    return <Navigate to="/admin_panel/users" replace />;
   }
 
   return <Outlet />;

@@ -4,17 +4,18 @@ import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/S
 import SubstrateForUser from '../../components/SubstrateAdmin/SubstrateForUser/SubstrateForUser';
 import SelectAdmin from '../../components/Select/SelectAdmin';
 import { useEffect, useState } from 'react';
-import type { OrdersType, PurchaseStatus } from '../../types/apiType';
+import type { OneOrderType, PurchaseStatus } from '../../types/apiType';
 import { orderStatusOptions } from '../../constants/orderStatusOptions';
 import { getOrder, updateOrder } from '../../service/api';
 import { getFirstLetters } from '../../utils/firstLetters';
 import s from './OrderPage.module.scss';
 import { generateBlueGray } from '../../utils/generateBlueGray';
+import { toast } from 'sonner';
 
 function OrderPage() {
   const { id } = useParams();
   const orderId = Number(id);
-  const [order, setOrder] = useState<OrdersType | null>(null);
+  const [order, setOrder] = useState<OneOrderType | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<PurchaseStatus | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const accepted = order?.status === 'received' || order?.status === 'canceled';
@@ -26,7 +27,7 @@ function OrderPage() {
         setOrder(data);
         setSelectedStatus(data.status);
       } catch (error) {
-        console.log('продукт не найден');
+        toast.error('не удалось загрузить товар');
         setOrder(null);
       }
     };
@@ -45,14 +46,14 @@ function OrderPage() {
     try {
       const response = await updateOrder(order.orderId, { status: selectedStatus });
       if (response.success) {
-        console.log('ура ура ура');
+        toast.success('статус успешно обновлен');
         setOrder((prev) => {
           if (prev === null) return prev;
           return { ...prev, status: selectedStatus };
         });
       }
     } catch (error) {
-      console.log('не удалось обновить статус заказа');
+      toast.error('ошибка при обновлении статуса');
     } finally {
       setIsSubmitting(false);
     }
@@ -67,7 +68,7 @@ function OrderPage() {
       <SubstrateForUser className={s['substrate']}>
         <dl className={s['substrate__info-wrapper']}>
           <dt className={s['substrate__avatar']}>
-            <img src="" alt="" />
+            <img src={order.image} alt="" />
           </dt>
           <dd className={s['substrate__info-container']}>
             <dl className={s['substrate__user-details']}>
@@ -83,7 +84,9 @@ function OrderPage() {
       <div className={s['order-info']}>
         <SubstrateForFrom title="Параметры товара">
           <div className={s['product']}>
-            <div className={s['product__image']}>{/* <img src="" alt="" /> */}</div>
+            <div className={s['product__image']}>
+              <img src={order.image} alt="" />
+            </div>
             <p className={s['product__name']}>{order.itemName}</p>
           </div>
 
@@ -120,9 +123,6 @@ function OrderPage() {
               <p className={s['buyer__contact']}>{order.userPhoneNumber}</p>
             </div>
           </div>
-          <button type="button" className={s['buyer__link']}>
-            Нажмите, чтобы открыть профиль участника
-          </button>
         </SubstrateForFrom>
       </div>
     </section>
