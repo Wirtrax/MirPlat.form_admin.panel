@@ -38,9 +38,6 @@ const attemptStatisticSlice = createSlice({
       state.data = initialState.data;
       state.error = initialState.error;
     },
-    increaseWaitingAttempts: (state) => {
-      state.data.waitingAttempts += 1;
-    },
     decreaseWaitingAttempts: (state) => {
       state.data.waitingAttempts = Math.max(0, state.data.waitingAttempts - 1);
     },
@@ -62,5 +59,5 @@ const attemptStatisticSlice = createSlice({
   },
 });
 
-export const { resetStatistic, increaseWaitingAttempts, decreaseWaitingAttempts } = attemptStatisticSlice.actions;
+export const { resetStatistic, decreaseWaitingAttempts } = attemptStatisticSlice.actions;
 export default attemptStatisticSlice.reducer;

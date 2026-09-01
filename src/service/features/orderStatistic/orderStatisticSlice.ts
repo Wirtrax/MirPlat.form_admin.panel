@@ -38,9 +38,6 @@ const orderStatisticSlice = createSlice({
       state.data = initialState.data;
       state.error = initialState.error;
     },
-    increaseWaitingOrder: (state) => {
-      state.data.waitingOrder += 1;
-    },
     decreaseWaitingOrder: (state) => {
       state.data.waitingOrder = Math.max(0, state.data.waitingOrder - 1);
     },
@@ -62,5 +59,5 @@ const orderStatisticSlice = createSlice({
   },
 });
 
-export const { resetStatistic, increaseWaitingOrder, decreaseWaitingOrder } = orderStatisticSlice.actions;
+export const { resetStatistic, decreaseWaitingOrder } = orderStatisticSlice.actions;
 export default orderStatisticSlice.reducer;
