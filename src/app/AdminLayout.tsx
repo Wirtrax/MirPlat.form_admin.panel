@@ -1,7 +1,6 @@
 import s from './AdminLayout.module.scss';
 
 import SideBar from '../components/SideBar/SideBar';
-import StatCard from '../components/StatCard/StatCard';
 
 import UsersIcon from '../assets/ico/admin/users.svg?react';
 import GameIcon from '../assets/ico/admin/game.svg?react';
@@ -10,14 +9,33 @@ import AllOrderIcon from '../assets/ico/admin/allOrder.svg?react';
 import LogoIcon from '../assets/ico/app/plat.romIco.png?url';
 import { Outlet } from 'react-router-dom';
 import { downloadXLSXFile } from '../service/api';
-import { useAppDispatch } from '../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { useEffect } from 'react';
+import { fetchUserStatistic } from '../service/features/userStatistic/userStatisticSlice';
+import { fetchAttemptStatistic } from '../service/features/attemptStatistic/attemptStatisticSlice';
+import { fetchOrderStatistic } from '../service/features/orderStatistic/orderStatisticSlice';
 import { unsetSuperAdmin } from '../service/features/superAdmin/superAdminSlice';
 import { TOKEN_STORAGE_KEY } from '../service/utils/authToken';
+import Statistic from './Statistic/Statistic';
+import { fetchItemStatistic } from '../service/features/itemStatistic/itemStatisticSlice';
 
 interface AdminLayoutProps {}
 
 const AdminLayout: React.FC<AdminLayoutProps> = () => {
   const dispatch = useAppDispatch();
+
+  const totalUser = useAppSelector((state) => state.userStatistic.data.totalUser);
+  const waitingAttempt = useAppSelector((state) => state.attemptStatistic.data.waitingAttempts);
+  const waitingOrder = useAppSelector((state) => state.orderStatistic.data.waitingOrder);
+  const totalItem = useAppSelector((state) => state.itemStatistic.data.totalItem);
+
+  useEffect(() => {
+    dispatch(fetchUserStatistic());
+    dispatch(fetchAttemptStatistic());
+    dispatch(fetchOrderStatistic());
+    dispatch(fetchItemStatistic());
+  }, [dispatch]);
+
   const handleDownload = async () => {
     const blob = await downloadXLSXFile();
     const url = window.URL.createObjectURL(blob);
@@ -41,10 +59,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = () => {
         title="Leska"
         subtitle="ADMIN PANEL"
         navItems={[
-          { label: 'Пользователи', path: '/admin_panel/users', count: 0, icon: <UsersIcon /> },
-          { label: 'Товары', path: '/admin_panel/items', count: 0, icon: <ProductIcon /> },
-          { label: 'Все заказы', path: '/admin_panel/orders', count: 0, icon: <AllOrderIcon /> },
-          { label: 'Участники игр', path: '/admin_panel/attempts', count: 0, icon: <GameIcon /> },
+          { label: 'Пользователи', path: '/admin_panel/users', count: totalUser, icon: <UsersIcon /> },
+          { label: 'Товары', path: '/admin_panel/items', count: totalItem, icon: <ProductIcon /> },
+          { label: 'Все заказы', path: '/admin_panel/orders', count: waitingOrder, icon: <AllOrderIcon /> },
+          { label: 'Участники игр', path: '/admin_panel/attempts', count: waitingAttempt, icon: <GameIcon /> },
         ]}
         adminName="Админ Дежурный"
         adminRole="Суперадмин"
@@ -53,11 +71,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = () => {
         onLogout={handleLogout}
       />
       <main className={s['main']}>
-        <section className={s['stat-card__container']}>
-          <StatCard icon={<AllOrderIcon />} value={10} title="Заказов в ожидании" />
-          <StatCard className={s['stat-card--deafult-blue']} icon={<GameIcon />} value={10} title="Попыток в играх" />
-          <StatCard className={s['stat-card--dark-blue']} icon={<UsersIcon />} value={10} title="Всего участников" />
-        </section>
+        <Statistic totalUser={totalUser} waitingAttempt={waitingAttempt} waitingOrder={waitingOrder} />
         <Outlet />
       </main>
     </div>

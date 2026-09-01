@@ -11,10 +11,13 @@ import { getFirstLetters } from '../../utils/firstLetters';
 import s from './OrderPage.module.scss';
 import { generateBlueGray } from '../../utils/generateBlueGray';
 import { toast } from 'sonner';
+import { useAppDispatch } from '../../hooks/redux';
+import { decreaseWaitingOrder } from '../../service/features/orderStatistic/orderStatisticSlice';
 
 function OrderPage() {
   const { id } = useParams();
   const orderId = Number(id);
+  const dispatch = useAppDispatch();
   const [order, setOrder] = useState<OneOrderType | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<PurchaseStatus | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,6 +54,7 @@ function OrderPage() {
           if (prev === null) return prev;
           return { ...prev, status: selectedStatus };
         });
+        dispatch(decreaseWaitingOrder());
       }
     } catch (error) {
       toast.error('ошибка при обновлении статуса');

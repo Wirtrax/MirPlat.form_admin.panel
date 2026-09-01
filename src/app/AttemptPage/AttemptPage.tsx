@@ -13,10 +13,13 @@ import { attemptStatusOptions } from '../../constants/attemptStatusOptions';
 import s from './AttemptPage.module.scss';
 import { toast } from 'sonner';
 import Coin from '../../assets/ico/interface/currency.svg?react';
+import { useAppDispatch } from '../../hooks/redux';
+import { decreaseWaitingAttempts } from '../../service/features/attemptStatistic/attemptStatisticSlice';
 
 function AttemptPage() {
   const { id } = useParams();
   const attemptId = Number(id);
+  const dispatch = useAppDispatch();
 
   const [attempt, setAttempt] = useState<AttemptsTypeFullInformation | null>(null);
   const [status, setStatus] = useState<AttemptStatus>('waiting');
@@ -56,6 +59,7 @@ function AttemptPage() {
           if (prev === null) return prev;
           return { ...prev, attemptStatus: status };
         });
+        dispatch(decreaseWaitingAttempts());
       }
     } finally {
       setIsSubmitting(false);

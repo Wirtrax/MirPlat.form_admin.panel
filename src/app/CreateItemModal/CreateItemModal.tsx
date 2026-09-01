@@ -12,12 +12,14 @@ import { craeteItem } from '../../service/api';
 import s from './CreateItemModal.module.scss';
 import type { CreateItemModalProps } from './CreateItemModalProps';
 import { toast } from 'sonner';
+import { useAppDispatch } from '../../hooks/redux';
+import { increaseTotalItem } from '../../service/features/itemStatistic/itemStatisticSlice';
 
 const schema = yup.object({
   name: yup.string().trim().required('Укажите название товара'),
   description: yup.string().trim().required('Укажите описание товара'),
   image: yup.mixed<File>().required('Выберите изображение'),
-  price: yup.number().positive('Цена должна быть больше нуля').required('Укажите цену'),
+  price: yup.number().typeError('Введите число').positive('Цена должна быть больше нуля').required('Укажите цену'),
   quantity: yup
     .number()
     .typeError('Введите число')
@@ -39,6 +41,8 @@ const defaultValues = {
 };
 
 function CreateItemModal({ onClose, onCreated }: CreateItemModalProps) {
+  const dispatch = useAppDispatch();
+
   const {
     control,
     clearErrors,
@@ -82,14 +86,16 @@ function CreateItemModal({ onClose, onCreated }: CreateItemModalProps) {
       console.log(typeof values.image);
 
       const response = await craeteItem(formData);
-
-      onCreated({
-        ...values,
-        image: response.image,
-        id: response.id,
-      });
-      onClose();
-      toast.success('Товар был успешно создан');
+      if (response) {
+        onCreated({
+          ...values,
+          image: response.image,
+          id: response.id,
+        });
+        onClose();
+        toast.success('Товар был успешно создан');
+        dispatch(increaseTotalItem());
+      }
     } catch (err) {
       setError('root.serverError', {
         type: 'server',
