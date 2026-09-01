@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import AdminButton from '../../components/AdminButton/AdminButton';
@@ -20,7 +20,7 @@ import { toast } from 'sonner';
 const schema = yup.object({
   name: yup.string().trim().required('Укажите название товара'),
   description: yup.string().trim().required('Укажите описание товара'),
-  image: yup.string().trim().url('Введите корректную ссылку на изображение').required('Укажите изображение'),
+  image: yup.mixed<string | File>().notRequired(),
   price: yup.number().typeError('Введите число').positive('Цена должна быть больше нуля').required('Укажите цену'),
   quantity: yup
     .number()
@@ -33,10 +33,10 @@ const schema = yup.object({
 
 type FormValues = yup.InferType<typeof schema>;
 
-const emptyValues: FormValues = {
+const defaultValues: FormValues = {
   name: '',
   description: '',
-  image: '',
+  image: undefined,
   quantity: 0,
   price: 0,
   is_active: true,
@@ -47,8 +47,12 @@ function ItemPage() {
   const productId = Number(id);
   const [item, setItem] = useState<Product | null>(null);
   const [ordersByItem, setOrdersByItem] = useState<OrdersType[]>([]);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const {
+    control,
+    clearErrors,
+    setError,
     register,
     watch,
     reset,
@@ -57,7 +61,7 @@ function ItemPage() {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: yupResolver(schema),
-    defaultValues: emptyValues,
+    defaultValues,
     mode: 'onTouched',
   });
 
@@ -66,6 +70,7 @@ function ItemPage() {
       try {
         const data = await getItem(productId);
         setItem(data);
+        setImagePreview(data.image);
         reset({
           name: data.name,
           description: data.description,
@@ -112,13 +117,43 @@ function ItemPage() {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const updatedItemData: Product = { ...item, ...values };
+      const formData = new FormData();
+      formData.append('name', values.name);
+      formData.append('description', values.description);
+      formData.append('price', String(values.price));
+      formData.append('quantity', String(values.quantity));
+      formData.append('is_active', String(values.is_active));
 
-      const response = await updateItem(item.id, updatedItemData);
+      let newImageUrl: string | undefined;
+
+      if (values.image instanceof File) {
+        formData.append('image', values.image);
+        newImageUrl = URL.createObjectURL(values.image);
+      } else if (typeof values.image === 'string') {
+        newImageUrl = values.image;
+      }
+
+      const response = await updateItem(item.id, formData);
       if (response.success) {
         toast.success('данные обновлены успешно');
-        setItem(updatedItemData);
-        reset(values);
+
+        setItem((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            ...values,
+            image: newImageUrl || prev.image,
+          };
+        });
+
+        if (newImageUrl) {
+          setImagePreview(newImageUrl);
+        }
+
+        reset({
+          ...values,
+          image: newImageUrl || values.image,
+        });
       }
     } catch (error) {
       toast.error('ошибка обновления');
@@ -130,7 +165,7 @@ function ItemPage() {
       <SubstrateForUser className={s['substrate']}>
         <dl className={s['substrate__info-wrapper']}>
           <dt className={s['substrate__avatar']}>
-            <img src={item.image} alt="" className={s['substrate__avatar-image']} />
+            <img src={imagePreview || item.image} alt="" className={s['substrate__avatar-image']} />
           </dt>
           <dd className={s['substrate__info-container']}>
             <dl className={s['substrate__user-details']}>
@@ -160,13 +195,13 @@ function ItemPage() {
 
             <div className={s['form__input-split']}>
               <div>
-                <AdminInput label="Цена" type="text" placeholder="Цена" {...register('price')} />
+                <AdminInput label="Цена" type="number" placeholder="Цена" {...register('price')} />
                 {errors.price && <p className={s['form__error']}>{errors.price.message}</p>}
               </div>
               <div>
                 <AdminInput
                   label="Остаток на складе"
-                  type="text"
+                  type="number"
                   placeholder="Остаток на складе"
                   {...register('quantity')}
                 />
@@ -174,10 +209,43 @@ function ItemPage() {
               </div>
             </div>
 
-            <div>
-              <AdminInput label="Изображение" type="text" placeholder="https://..." {...register('image')} />
-              {errors.image && <p className={s['form__error']}>{errors.image.message}</p>}
-            </div>
+            <Controller
+              name="image"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <AdminInput
+                    label="Изображение"
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        if (file.size > 5 * 1024 * 1024) {
+                          setError('image', { type: 'manual', message: 'Файл слишком большой (макс. 5MB)' });
+                          return;
+                        }
+
+                        if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                          setError('image', {
+                            type: 'manual',
+                            message: 'Поддерживаются только JPEG, PNG',
+                          });
+                          return;
+                        }
+                        clearErrors('image');
+                        field.onChange(file);
+                      }
+                    }}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                  />
+
+                  {errors.image && <p className={s['form__error']}>{errors.image.message}</p>}
+                </>
+              )}
+            />
 
             <div className={s['form__checkbox-panel']}>
               <ChekboxAdmin
@@ -187,14 +255,11 @@ function ItemPage() {
                 {...register('is_active')}
               />
             </div>
+
+            <AdminButton type="submit" disabled={isSubmitting} className={s['form__button']}>
+              {isSubmitting ? 'Сохранение...' : 'Сохранить изменения'}
+            </AdminButton>
           </form>
-          <AdminButton
-            type="submit"
-            disabled={isSubmitting}
-            className={s['form__button']}
-            onClick={handleSubmit(onSubmit)}>
-            {isSubmitting ? 'Сохранение...' : 'Сохранить изменения'}
-          </AdminButton>
         </SubstrateForFrom>
 
         <SubstrateForFrom title="Последние покупки/Куплено раз" count={ordersByItem.length}>

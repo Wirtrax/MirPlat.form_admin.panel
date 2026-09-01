@@ -57,20 +57,20 @@ function CreateItemModal({ onClose, onCreated }: CreateItemModalProps) {
     mode: 'onTouched',
   });
 
-  // const watchedImage = watch('image');
-  // const [imagePreview, setImagePreview] = useState<string>('');
+  const watchedImage = watch('image');
+  const [imagePreview, setImagePreview] = useState<string>('');
 
-  // useEffect(() => {
-  //   if (watchedImage instanceof File) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setImagePreview(reader.result as string);
-  //     };
-  //     reader.readAsDataURL(watchedImage);
-  //   } else {
-  //     setImagePreview('');
-  //   }
-  // }, [watchedImage]);
+  useEffect(() => {
+    if (watchedImage instanceof File) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(watchedImage);
+    } else {
+      setImagePreview('');
+    }
+  }, [watchedImage]);
 
   const onSubmit = async (values: FormValues) => {
     try {
@@ -169,18 +169,12 @@ function CreateItemModal({ onClose, onCreated }: CreateItemModalProps) {
             )}
           />
 
-          {/* {imagePreview && (
+          {imagePreview && (
             <div className={s['image-preview']}>
+              <p className={s['image-preview__label']}>загруженное изображение: </p>
               <img src={imagePreview} alt="Предпросмотр" />
-              <button
-                type="button"
-                onClick={() => {
-                  setImagePreview('');
-                }}>
-                скрыть
-              </button>
             </div>
-          )} */}
+          )}
 
           <div className={s['form__checkbox-panel']}>
             <ChekboxAdmin

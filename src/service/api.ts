@@ -53,7 +53,7 @@ export const getItem = (id: number) => {
 
 export const updateItem = (
   id: number,
-  data: Partial<Product>
+  formData: FormData
 ): Promise<{
   success: boolean;
 }> => {
@@ -64,7 +64,7 @@ export const updateItem = (
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
       },
-      data,
+      data: formData,
     },
     'admin'
   );
@@ -293,7 +293,7 @@ export const getAllAttemptsByUser = (id: number) => {
 
 export const updateAttepmt = (
   id: number,
-  data: { status: AttemptStatus }
+  data: { attemptStatus: AttemptStatus }
 ): Promise<{
   success: boolean;
 }> => {

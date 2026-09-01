@@ -52,7 +52,7 @@ function AttemptPage() {
   const handleSave = async () => {
     setIsSubmitting(true);
     try {
-      const response = await updateAttepmt(attempt.attemptId, { status: status });
+      const response = await updateAttepmt(attempt.attemptId, { attemptStatus: status });
       if (response.success) {
         toast.success('статус попытки успешно обновлен');
         setAttempt((prev) => {
