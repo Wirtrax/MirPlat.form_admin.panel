@@ -50,6 +50,11 @@ function AttemptPage() {
   };
 
   const handleSave = async () => {
+    if (attempt.attemptStatus === status) {
+      toast.info('Статус не изменился');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const response = await updateAttepmt(attempt.attemptId, { attemptStatus: status });

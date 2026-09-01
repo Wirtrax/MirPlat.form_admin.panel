@@ -15,6 +15,10 @@
     grid-template-rows: auto auto;
     gap: rem(20);
 
+    @include laptop {
+        grid-template-columns: 1fr;
+    }
+
     >*:first-child {
         grid-row: 1 / -1;
     }

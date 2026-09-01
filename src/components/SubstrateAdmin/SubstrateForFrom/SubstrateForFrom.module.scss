@@ -3,6 +3,7 @@
     border: rem(1) solid var(--color-gray-80);
     border-radius: rem(8);
     padding: rem(16);
+    height: min-content;
 
     &:last-child {
         margin-bottom: 0;

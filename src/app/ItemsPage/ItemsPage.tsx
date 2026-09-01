@@ -16,19 +16,14 @@ function ItemsPage() {
   const [items, setItems] = useState<Product[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchItems = async () => {
-      setLoading(true);
       try {
         const data = await getItems();
         setItems(data);
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
+      } catch (error) {}
     };
 
     fetchItems();

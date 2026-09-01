@@ -4,6 +4,8 @@
 .substrate {
     @include page.substrate-header;
 
+
+
     &__avatar {
         @include page.avatar-circle;
     }
@@ -18,6 +20,10 @@
     grid-template-columns: 2fr 1fr;
     grid-template-rows: repeat(3, auto);
     gap: rem(10);
+
+    @include laptop {
+        grid-template-columns: 1fr;
+    }
 
     &> :first-child {
         grid-row: 1 / 3;

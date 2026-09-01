@@ -23,7 +23,7 @@ import { toast } from 'sonner';
 const schema = yup.object({
   first_name: yup.string().trim().required('Укажите имя'),
   last_name: yup.string().trim().required('Укажите фамилию'),
-  patronym: yup.string().trim().required(),
+  patronym: yup.string().trim().notRequired(),
   specialization: yup.string().required('Выберите специализацию'),
   programming_level: yup.string().required('Выберите уровень'),
   email: yup.string().trim().email('Некорректный email').required('Укажите email'),
@@ -115,7 +115,7 @@ function UserPage() {
     if (!user) return;
 
     try {
-      const updatedUserData: User = { ...user, ...values };
+      const updatedUserData: User = { ...user, ...values, patronym: values.patronym || user.patronym };
 
       const updateFullUser = await updateUser(user.id, updatedUserData);
       const updateStatusUser = await updateUserRole(user.id, { isAdmin: updatedUserData.is_admin });
@@ -256,7 +256,7 @@ function UserPage() {
           <ul className={s['orders-list']}>
             {userOrders.length > 0 ? (
               userOrders.slice(0, 7).map((order) => (
-                <li className={s['orders-list__item']}>
+                <li className={s['orders-list__item']} key={order.orderId}>
                   <div className={s['orders-list__info']}>
                     <span className={s['orders-list__initials']} style={{ background: generateBlueGray() }}>
                       <img src={order.itemImage} alt="" />
@@ -278,7 +278,7 @@ function UserPage() {
           <ul className={s['orders-list']}>
             {userAttempts.length > 0 ? (
               userAttempts.slice(0, 7).map((attempt) => (
-                <li className={s['orders-list__item']}>
+                <li className={s['orders-list__item']} key={attempt.attemptId}>
                   <div className={s['orders-list__info']}>
                     <p className={s['orders-list__customer']}>
                       {attempt.activityName}

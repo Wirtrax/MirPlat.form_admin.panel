@@ -15,18 +15,13 @@ import debounce from '../../utils/debounse';
 function OrdersPage() {
   const [orders, setOrders] = useState<OrdersType[]>([]);
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchOrder = async () => {
-      setLoading(true);
       try {
         const data = await getOrders();
         setOrders(data);
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
+      } catch (error) {}
     };
 
     fetchOrder();

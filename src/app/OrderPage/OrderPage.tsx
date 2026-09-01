@@ -45,6 +45,11 @@ function OrderPage() {
   const handleUpdateStatus = async () => {
     if (!order || !selectedStatus) return;
 
+    if (order.status == selectedStatus) {
+      toast.info('Статус не изменился');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const response = await updateOrder(order.orderId, { status: selectedStatus });

@@ -15,18 +15,13 @@ import debounce from '../../utils/debounse';
 function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      setLoading(true);
       try {
         const data = await getUsers();
         setUsers(data);
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
+      } catch (error) {}
     };
 
     fetchUsers();

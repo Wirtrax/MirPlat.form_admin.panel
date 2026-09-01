@@ -40,7 +40,7 @@ const AdminLoginForm: React.FC<AdminLoginFormProps> = ({ className = '' }) => {
       dispatch(setSuperAdmin(true));
       navigate('/admin_panel/users', { replace: true });
     } catch (err) {
-      setError('root.serverError', { type: 'auth', message: 'неверный логшин или пароль' });
+      setError('root.serverError', { type: 'auth', message: 'неверный логин или пароль' });
       dispatch(unsetSuperAdmin());
     }
   };

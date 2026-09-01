@@ -17,18 +17,13 @@ function AttemptsPage() {
   const [attempts, setAttempts] = useState<AttemptsType[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchattempts = async () => {
-      setLoading(true);
       try {
         const data = await getAttempts();
         setAttempts(data);
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
+      } catch (error) {}
     };
 
     fetchattempts();
