@@ -4,7 +4,7 @@ export const ROUTES = {
   REGISTRATION: `${ROOT_PATH}/registration`,
 
   USER: `${ROOT_PATH}/users`,
-  USER_BY_ID: `${ROOT_PATH}/user/:id`,
+  USER_BY_ID: `${ROOT_PATH}/users/:id`,
 
   ITEMS: `${ROOT_PATH}/items`,
   ITEMS_BY_ID: `${ROOT_PATH}/items/:id`,
