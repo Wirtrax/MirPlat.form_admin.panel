@@ -3,7 +3,7 @@
     background: var(--color-light);
     border-radius: rem(16);
     box-shadow: 0 rem(2) rem(8) var(--color-shadow-08);
-    overflow: hidden;
+    overflow-x: auto;
 
     &__header {
         padding: rem(24) rem(32) rem(16) rem(32);

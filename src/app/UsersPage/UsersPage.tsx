@@ -1,27 +1,43 @@
+// 1. Сторонние библиотеки
 import { useEffect, useState, useMemo, type ChangeEvent } from 'react';
+import clsx from 'clsx';
+
+// 2. Локальные модули — компоненты
 import Input from '../../components/Input/AdminInput';
 import Table from '../../components/Table/Table';
 import Title from '../../components/Title/Title';
-import type { User } from '../../types/apiType';
+import Loader from '../../components/Loader/Loader';
+
+// 3. Локальные модули — сервисы и утилиты
 import { getUsers } from '../../service/api';
-import type { TableColumn } from '../../components/Table/tableProps';
-import s from './UsersPage.module.scss';
-import pageStyle from '../Page.module.scss';
-import clsx from 'clsx';
 import { getFirstLetters } from '../../utils/firstLetters';
 import { generateBlueGray } from '../../utils/generateBlueGray';
 import debounce from '../../utils/debounse';
 
+// 4. Локальные модули — типы
+import type { User } from '../../types/apiType';
+import type { TableColumn } from '../../components/Table/tableProps';
+
+// 5. Стили
+import s from './UsersPage.module.scss';
+import pageStyle from '../Page.module.scss';
+import { ROUTES } from '../../constants/routes';
+
 function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setIsLoading(true);
         const data = await getUsers();
         setUsers(data);
-      } catch (error) {}
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchUsers();
@@ -118,12 +134,13 @@ function UsersPage() {
           <Input placeholder="поиск по имени, email, телефон..." type="search" onChange={handleSearch} />
         </div>
       </div>
+      {isLoading && <Loader />}
       <Table
         title="Список пользователей"
         countElements={`${users.length} записей`}
         columns={columns}
         data={filteredUsers}
-        link={(user) => `/admin_panel/user/${user.id}`}
+        link={(user) => `${ROUTES.USER}/${user.id}`}
       />
     </section>
   );

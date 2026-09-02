@@ -1,29 +1,47 @@
+// 1. Сторонние библиотеки
 import { useEffect, useState, type ChangeEvent } from 'react';
+
+// 2. Локальные модули — компоненты
 import AdminButton from '../../components/AdminButton/AdminButton';
 import Input from '../../components/Input/AdminInput';
 import Table from '../../components/Table/Table';
 import Title from '../../components/Title/Title';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
+import Loader from '../../components/Loader/Loader';
+
+// 3. Локальные модули — страницы
+import CreateItemModal from '../CreateItemModal/CreateItemModal';
+
+// 4. Локальные модули — сервисы и утилиты
 import { getItems } from '../../service/api';
+import debounce from '../../utils/debounse';
+
+// 5. Локальные модули — типы
 import type { TableColumn } from '../../components/Table/tableProps';
+import type { Product } from '../../types/apiType';
+
+// 6. Стили
 import s from './ItemsPage.module.scss';
 import pageStyle from '../Page.module.scss';
-import type { Product } from '../../types/apiType';
-import CreateItemModal from '../CreateItemModal/CreateItemModal';
-import debounce from '../../utils/debounse';
+import { ROUTES } from '../../constants/routes';
 
 function ItemsPage() {
   const [items, setItems] = useState<Product[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
+        setIsLoading(true);
         const data = await getItems();
         setItems(data);
-      } catch (error) {}
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchItems();
@@ -93,12 +111,13 @@ function ItemsPage() {
           </AdminButton>
         </div>
       </div>
+      {isLoading && <Loader />}
       <Table
         title="Каталог"
         countElements={`${items.length} позиций`}
         columns={columns}
         data={filteredItems}
-        link={(items) => `/admin_panel/items/${items.id}`}
+        link={(items) => `${ROUTES.ITEMS}/${items.id}`}
       />
 
       {isCreateModalOpen && (

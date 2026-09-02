@@ -1,24 +1,36 @@
+// 1. Сторонние библиотеки
 import { useParams } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
+// 2. Локальные модули — компоненты
 import AdminButton from '../../components/AdminButton/AdminButton';
 import AdminInput from '../../components/Input/AdminInput';
 import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/SubstrateForFrom';
 import SubstrateForUser from '../../components/SubstrateAdmin/SubstrateForUser/SubstrateForUser';
-import { useEffect, useState } from 'react';
-import type { AttemptsTypeFullInformation, OrderResponseByUserId, User } from '../../types/apiType';
-import { getAllAttemptsByUser, getAllOrdersByUser, getUser, updateUser, updateUserRole } from '../../service/api';
-import { getFirstLetters } from '../../utils/firstLetters';
-import s from './UserPage.module.scss';
 import SelectAdmin from '../../components/Select/SelectAdmin';
-import { specializationOptions } from '../../constants/specializationOptions';
-import { levelOptions } from '../../constants/programmingLeveloptions';
 import ChekboxAdmin from '../../components/Chekbox/CheckboxAdmin';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
+import Loader from '../../components/Loader/Loader';
+
+// 3. Локальные модули — сервисы и утилиты
+import { getAllAttemptsByUser, getAllOrdersByUser, getUser, updateUser, updateUserRole } from '../../service/api';
+import { getFirstLetters } from '../../utils/firstLetters';
+import { specializationOptions } from '../../constants/specializationOptions';
+import { levelOptions } from '../../constants/programmingLeveloptions';
 import { generateBlueGray } from '../../utils/generateBlueGray';
+
+// 4. Локальные модули — типы
+import type { AttemptsTypeFullInformation, OrderResponseByUserId, User } from '../../types/apiType';
+
+// 5. Ассеты
 import Coin from '../../assets/ico/interface/currency.svg?react';
-import { toast } from 'sonner';
+
+// 6. Стили
+import s from './UserPage.module.scss';
 
 const schema = yup.object({
   first_name: yup.string().trim().required('Укажите имя'),
@@ -131,7 +143,11 @@ function UserPage() {
   };
 
   if (isLoading) {
-    return <div>Загрузка...</div>;
+    return (
+      <div className={s['container']}>
+        <Loader />
+      </div>
+    );
   }
 
   if (!user) {

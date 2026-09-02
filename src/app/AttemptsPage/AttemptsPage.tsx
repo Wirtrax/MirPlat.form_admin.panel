@@ -1,29 +1,47 @@
+// 1. Сторонние библиотеки
 import { useEffect, useState, type ChangeEvent } from 'react';
+
+// 2. Локальные модули — компоненты
 import Input from '../../components/Input/AdminInput';
 import Table from '../../components/Table/Table';
 import Title from '../../components/Title/Title';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
+import Loader from '../../components/Loader/Loader';
+
+// 3. Локальные модули — сервисы и утилиты
 import { getAttempts } from '../../service/api';
-import type { TableColumn } from '../../components/Table/tableProps';
-import s from './AttemptsPage.module.scss';
-import pageStyle from '../Page.module.scss';
 import debounce from '../../utils/debounse';
-import type { AttemptsType } from '../../types/apiType';
 import { getFirstLetters } from '../../utils/firstLetters';
 import { generateBlueGray } from '../../utils/generateBlueGray';
+
+// 4. Локальные модули — типы
+import type { TableColumn } from '../../components/Table/tableProps';
+import type { AttemptsType } from '../../types/apiType';
+
+// 5. Ассеты
 import Coin from '../../assets/ico/interface/currency.svg?react';
+
+// 6. Стили
+import s from './AttemptsPage.module.scss';
+import pageStyle from '../Page.module.scss';
+import { ROUTES } from '../../constants/routes';
 
 function AttemptsPage() {
   const [attempts, setAttempts] = useState<AttemptsType[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchattempts = async () => {
       try {
+        setIsLoading(true);
         const data = await getAttempts();
         setAttempts(data);
-      } catch (error) {}
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchattempts();
@@ -99,12 +117,13 @@ function AttemptsPage() {
           <Input placeholder="поиск по названию" type="search" value={searchValue} onChange={handleSearch} />
         </div>
       </div>
+      {isLoading && <Loader />}
       <Table
         title="Каталог"
         countElements={`${attempts.length} позиций`}
         columns={columns}
         data={filteredAttempts}
-        link={(attempts) => `/admin_panel/attempts/${attempts.attemptId}`}
+        link={(attempts) => `${ROUTES.ATTEMPTS}/${attempts.attemptId}`}
       />
     </section>
   );

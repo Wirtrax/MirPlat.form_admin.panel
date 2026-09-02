@@ -1,21 +1,30 @@
+// 1. Сторонние библиотеки
 import { useParams } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
+// 2. Локальные модули — компоненты
 import AdminButton from '../../components/AdminButton/AdminButton';
 import AdminInput from '../../components/Input/AdminInput';
 import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/SubstrateForFrom';
 import SubstrateForUser from '../../components/SubstrateAdmin/SubstrateForUser/SubstrateForUser';
-import { useEffect, useState } from 'react';
-import type { OrdersType, Product } from '../../types/apiType';
-import { getAllOrdersByItem, getItem, hideItem, updateItem } from '../../service/api';
-import { getFirstLetters } from '../../utils/firstLetters';
-import s from './ItemPage.module.scss';
 import ChekboxAdmin from '../../components/Chekbox/CheckboxAdmin';
 import AdminTextarea from '../../components/AdminTextarea/AdminTextarea';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
+
+// 3. Локальные модули — сервисы и утилиты
+import { getAllOrdersByItem, getItem, hideItem, updateItem } from '../../service/api';
+import { getFirstLetters } from '../../utils/firstLetters';
 import { generateBlueGray } from '../../utils/generateBlueGray';
-import { toast } from 'sonner';
+
+// 4. Локальные модули — типы
+import type { OrdersType, Product } from '../../types/apiType';
+
+// 5. Стили
+import s from './ItemPage.module.scss';
 
 const schema = yup.object({
   name: yup.string().trim().required('Укажите название товара'),

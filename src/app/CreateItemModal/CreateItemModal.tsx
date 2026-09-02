@@ -1,19 +1,28 @@
+// 1. Сторонние библиотеки
 import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { toast } from 'sonner';
+
+// 2. Локальные модули — компоненты
 import Modal from '../../components/Modal/Modal';
 import AdminButton from '../../components/AdminButton/AdminButton';
 import AdminInput from '../../components/Input/AdminInput';
 import AdminTextarea from '../../components/AdminTextarea/AdminTextarea';
 import ChekboxAdmin from '../../components/Chekbox/CheckboxAdmin';
 import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/SubstrateForFrom';
+
+// 3. Локальные модули — сервисы и утилиты
 import { craeteItem } from '../../service/api';
-import s from './CreateItemModal.module.scss';
-import type { CreateItemModalProps } from './CreateItemModalProps';
-import { toast } from 'sonner';
 import { useAppDispatch } from '../../hooks/redux';
 import { increaseTotalItem } from '../../service/features/itemStatistic/itemStatisticSlice';
+
+// 4. Локальные модули — типы
+import type { CreateItemModalProps } from './CreateItemModalProps';
+
+// 5. Стили
+import s from './CreateItemModal.module.scss';
 
 const schema = yup.object({
   name: yup.string().trim().required('Укажите название товара'),

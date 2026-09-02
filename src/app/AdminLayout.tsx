@@ -1,23 +1,31 @@
-import s from './AdminLayout.module.scss';
-
-import SideBar from '../components/SideBar/SideBar';
-
-import UsersIcon from '../assets/ico/admin/users.svg?react';
-import GameIcon from '../assets/ico/admin/game.svg?react';
-import ProductIcon from '../assets/ico/admin/product.svg?react';
-import AllOrderIcon from '../assets/ico/admin/allOrder.svg?react';
-import LogoIcon from '../assets/ico/app/plat.romIco.png?url';
+// 1. Сторонние библиотеки
 import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+
+// 2. Локальные модули — компоненты
+import SideBar from '../components/SideBar/SideBar';
+import Statistic from './Statistic/Statistic';
+
+// 3. Локальные модули — сервисы и утилиты
 import { downloadXLSXFile } from '../service/api';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { useEffect } from 'react';
 import { fetchUserStatistic } from '../service/features/userStatistic/userStatisticSlice';
 import { fetchAttemptStatistic } from '../service/features/attemptStatistic/attemptStatisticSlice';
 import { fetchOrderStatistic } from '../service/features/orderStatistic/orderStatisticSlice';
 import { unsetSuperAdmin } from '../service/features/superAdmin/superAdminSlice';
 import { TOKEN_STORAGE_KEY } from '../service/utils/authToken';
-import Statistic from './Statistic/Statistic';
 import { fetchItemStatistic } from '../service/features/itemStatistic/itemStatisticSlice';
+
+// 4. Ассеты
+import UsersIcon from '../assets/ico/admin/users.svg?react';
+import GameIcon from '../assets/ico/admin/game.svg?react';
+import ProductIcon from '../assets/ico/admin/product.svg?react';
+import AllOrderIcon from '../assets/ico/admin/allOrder.svg?react';
+import LogoIcon from '../assets/ico/app/plat.romIco.png?url';
+
+// 5. Стили
+import s from './AdminLayout.module.scss';
+import { ROUTES } from '../constants/routes';
 
 interface AdminLayoutProps {}
 
@@ -59,10 +67,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = () => {
         title="Leska"
         subtitle="ADMIN PANEL"
         navItems={[
-          { label: 'Пользователи', path: '/admin_panel/users', count: totalUser, icon: <UsersIcon /> },
-          { label: 'Товары', path: '/admin_panel/items', count: totalItem, icon: <ProductIcon /> },
-          { label: 'Все заказы', path: '/admin_panel/orders', count: waitingOrder, icon: <AllOrderIcon /> },
-          { label: 'Участники игр', path: '/admin_panel/attempts', count: waitingAttempt, icon: <GameIcon /> },
+          { label: 'Пользователи', path: ROUTES.USER, count: totalUser, icon: <UsersIcon /> },
+          { label: 'Товары', path: ROUTES.ITEMS, count: totalItem, icon: <ProductIcon /> },
+          { label: 'Все заказы', path: ROUTES.ORDERS, count: waitingOrder, icon: <AllOrderIcon /> },
+          { label: 'Участники игр', path: ROUTES.ATTEMPTS, count: waitingAttempt, icon: <GameIcon /> },
         ]}
         adminName="Админ Дежурный"
         adminRole="Суперадмин"

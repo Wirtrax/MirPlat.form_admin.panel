@@ -1,10 +1,11 @@
+// 1. Сторонние библиотеки
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import PublicAdminRoute from './routes/PublicAdminRoute';
+
+// 2. Локальные модули — компоненты
 import AdminLayout from './app/AdminLayout';
 import UsersPage from './app/UsersPage/UsersPage';
 import AdminLoginForm from './app/AdminLoginForm/AdminLoginForm';
-import ProtectedAdminRoute from './routes/ProtectedAdminRoute';
 import ItemsPage from './app/ItemsPage/ItemsPage';
 import OrdersPage from './app/OrdersPage/OrdersPage';
 import UserPage from './app/UserPage/UserPage';
@@ -14,29 +15,36 @@ import AttemptPage from './app/AttemptPage/AttemptPage';
 import OrderPage from './app/OrderPage/OrderPage';
 import NotFound from './app/NotFound/NotFound';
 
+// 3. Локальные модули — маршруты
+import AdminRoute from './routes/AdminRoute';
+
+// 4. Локальные модули — константы
+import { ROOT_PATH, ROUTES } from './constants/routes';
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<Navigate to="/admin_panel/registration" replace />} />
+      <Route path="/" element={<Navigate to={ROUTES.REGISTRATION} replace />} />
+
       {/* Публичный роут для входа админа */}
-      <Route element={<PublicAdminRoute />}>
-        <Route path="/admin_panel/registration" element={<AdminLoginForm />} />
+      <Route element={<AdminRoute requireAuth={false} />}>
+        <Route path={ROUTES.REGISTRATION} element={<AdminLoginForm />} />
       </Route>
 
       {/* Защищённые роуты админки */}
-      <Route element={<ProtectedAdminRoute />}>
-        <Route path="/admin_panel" element={<AdminLayout />}>
-          <Route path="/admin_panel/users" element={<UsersPage />} />
-          <Route path="/admin_panel/user/:id" element={<UserPage />} />
+      <Route element={<AdminRoute requireAuth />}>
+        <Route path={ROOT_PATH} element={<AdminLayout />}>
+          <Route path={ROUTES.USER} element={<UsersPage />} />
+          <Route path={ROUTES.USER_BY_ID} element={<UserPage />} />
 
-          <Route path="/admin_panel/items" element={<ItemsPage />} />
-          <Route path="/admin_panel/items/:id" element={<ItemPage />} />
+          <Route path={ROUTES.ITEMS} element={<ItemsPage />} />
+          <Route path={ROUTES.ITEMS_BY_ID} element={<ItemPage />} />
 
-          <Route path="/admin_panel/orders" element={<OrdersPage />} />
-          <Route path="/admin_panel/orders/:id" element={<OrderPage />} />
+          <Route path={ROUTES.ORDERS} element={<OrdersPage />} />
+          <Route path={ROUTES.ORDERS_BY_ID} element={<OrderPage />} />
 
-          <Route path="/admin_panel/attempts" element={<AttemptsPage />} />
-          <Route path="/admin_panel/attempts/:id" element={<AttemptPage />} />
+          <Route path={ROUTES.ATTEMPTS} element={<AttemptsPage />} />
+          <Route path={ROUTES.ATTEMPTS_BY_ID} element={<AttemptPage />} />
         </Route>
       </Route>
 

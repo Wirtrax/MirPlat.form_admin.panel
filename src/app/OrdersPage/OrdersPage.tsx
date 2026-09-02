@@ -1,27 +1,43 @@
+// 1. Сторонние библиотеки
 import { useEffect, useState, useMemo, type ChangeEvent } from 'react';
+
+// 2. Локальные модули — компоненты
 import Input from '../../components/Input/AdminInput';
 import Table from '../../components/Table/Table';
 import Title from '../../components/Title/Title';
-import { getOrders } from '../../service/api';
-import type { TableColumn } from '../../components/Table/tableProps';
-import s from './OrdersPage.module.scss';
-import pageStyle from '../Page.module.scss';
-import type { OrdersType } from '../../types/apiType';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
+import Loader from '../../components/Loader/Loader';
+
+// 3. Локальные модули — сервисы и утилиты
+import { getOrders } from '../../service/api';
 import { getFirstLetters } from '../../utils/firstLetters';
 import { generateBlueGray } from '../../utils/generateBlueGray';
 import debounce from '../../utils/debounse';
 
+// 4. Локальные модули — типы
+import type { TableColumn } from '../../components/Table/tableProps';
+import type { OrdersType } from '../../types/apiType';
+
+// 5. Стили
+import s from './OrdersPage.module.scss';
+import pageStyle from '../Page.module.scss';
+import { ROUTES } from '../../constants/routes';
+
 function OrdersPage() {
   const [orders, setOrders] = useState<OrdersType[]>([]);
   const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
+        setIsLoading(true);
         const data = await getOrders();
         setOrders(data);
-      } catch (error) {}
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchOrder();
@@ -105,12 +121,13 @@ function OrdersPage() {
           <Input placeholder="Поиск по участнику или товару..." type="search" onChange={handleSearch} />
         </div>
       </div>
+      {isLoading && <Loader />}
       <Table
         title="Каталог"
         countElements={`${orders.length} позиций`}
         columns={columns}
         data={filteredOrders}
-        link={(order) => `/admin_panel/orders/${order.orderId}`}
+        link={(order) => `${ROUTES.ORDERS}/${order.orderId}`}
       />
     </section>
   );

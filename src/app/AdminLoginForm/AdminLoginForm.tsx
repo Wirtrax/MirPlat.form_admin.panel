@@ -1,16 +1,28 @@
+// 1. Сторонние библиотеки
 import React from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import s from './AdminLoginForm.module.scss';
+import { useNavigate } from 'react-router-dom';
+
+// 2. Локальные модули — компоненты
 import Input from '../../components/Input/AdminInput';
 import AdminButton from '../../components/AdminButton/AdminButton';
+
+// 3. Локальные модули — сервисы и утилиты
 import { adminLogin } from '../../service/api';
-import type { AdminLoginFormProps } from './adminLoginFormProps';
 import { setSuperAdmin, unsetSuperAdmin } from '../../service/features/superAdmin/superAdminSlice';
 import { useAppDispatch } from '../../hooks/redux';
-import { useNavigate } from 'react-router-dom';
+
+// 4. Локальные модули — типы
+import type { AdminLoginFormProps } from './adminLoginFormProps';
+
+// 5. Ассеты
 import Shild from '../../assets/ico/interface/shild.svg?react';
+
+// 6. Стили
+import s from './AdminLoginForm.module.scss';
+import { ROUTES } from '../../constants/routes';
 
 const schema = yup.object({
   login: yup.string().trim().required('введите логин'),
@@ -38,7 +50,7 @@ const AdminLoginForm: React.FC<AdminLoginFormProps> = ({ className = '' }) => {
     try {
       await adminLogin(value.login, value.password);
       dispatch(setSuperAdmin(true));
-      navigate('/admin_panel/users', { replace: true });
+      navigate(ROUTES.USER, { replace: true });
     } catch (err) {
       setError('root.serverError', { type: 'auth', message: 'неверный логин или пароль' });
       dispatch(unsetSuperAdmin());

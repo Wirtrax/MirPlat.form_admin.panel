@@ -1,11 +1,14 @@
 import s from './Statistic.module.scss';
-
+// 1. Локальные модули — компоненты
 import StatCard from '../../components/StatCard/StatCard';
+
+// 2. Локальные модули — типы
+import type { StatisticCardProps } from './statisticCardProps';
+
+// 3. Ассеты
 import UsersIcon from '../../assets/ico/admin/users.svg?react';
 import GameIcon from '../../assets/ico/admin/game.svg?react';
-
 import AllOrderIcon from '../../assets/ico/admin/allOrder.svg?react';
-import type { StatisticCardProps } from './statisticCardProps';
 
 function Statistic({ totalUser, waitingAttempt, waitingOrder }: StatisticCardProps) {
   return (

@@ -1,18 +1,27 @@
+// 1. Сторонние библиотеки
 import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
+// 2. Локальные модули — компоненты
 import AdminButton from '../../components/AdminButton/AdminButton';
 import SubstrateForFrom from '../../components/SubstrateAdmin/SubstrateForFrom/SubstrateForFrom';
 import SubstrateForUser from '../../components/SubstrateAdmin/SubstrateForUser/SubstrateForUser';
 import SelectAdmin from '../../components/Select/SelectAdmin';
-import { useEffect, useState } from 'react';
-import type { OneOrderType, PurchaseStatus } from '../../types/apiType';
+
+// 3. Локальные модули — сервисы и утилиты
 import { orderStatusOptions } from '../../constants/orderStatusOptions';
 import { getOrder, updateOrder } from '../../service/api';
 import { getFirstLetters } from '../../utils/firstLetters';
-import s from './OrderPage.module.scss';
 import { generateBlueGray } from '../../utils/generateBlueGray';
-import { toast } from 'sonner';
 import { useAppDispatch } from '../../hooks/redux';
 import { decreaseWaitingOrder } from '../../service/features/orderStatistic/orderStatisticSlice';
+
+// 4. Локальные модули — типы
+import type { OneOrderType, PurchaseStatus } from '../../types/apiType';
+
+// 5. Стили
+import s from './OrderPage.module.scss';
 
 function OrderPage() {
   const { id } = useParams();
